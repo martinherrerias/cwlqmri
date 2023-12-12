@@ -1,0 +1,34 @@
+T1_method: IR_E
+no_audit: true
+T1_vols:
+  - class: File
+    format: NIFTI
+    path: IR/OE_400.nii.gz
+    secondaryFiles:
+      - class: File
+        path: IR/OE_400.json
+  - class: File
+    path: IR/OE_800.nii.gz
+    secondaryFiles:
+      - class: File
+        path: IR/OE_800.json
+  - class: File
+    path: IR/OE_1000.nii.gz
+    secondaryFiles:
+      - class: File
+        path: IR/OE_1000.json
+  - class: File
+    path: IR/OE_1500.nii.gz
+    secondaryFiles:
+      - class: File
+        path: IR/OE_1500.json
+  - class: File
+    path: IR/OE_2000.nii.gz
+    secondaryFiles:
+      - class: File
+        path: IR/OE_2000.json
+  - class: File
+    path: IR/OE_2500.nii.gz
+    secondaryFiles:
+      - class: File
+        path: IR/OE_2500.json

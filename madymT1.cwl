@@ -16,9 +16,18 @@ doc: |
       - https://gitlab.com/manchester_qbi/manchester_qbi_public/madym_cxx/-/wikis/madym_t1
 
     NOTES:
+      - The following defaults override the madym defaults:
+        - `nifti_4D` is set to 1
+        - `nifti_scaling` is set to 1
+        - `use_BIDS` is set to 1
+        - `img_fmt_r`is set to `NIFTI_GZ`
+        - `img_fmt_w`is set to track `img_fmt_r`
+      - Other settings, like `cwd`, `output_root` and `output` are set by the wrapper.
+        Use `cwltool --basedir <base/dir> --outdir <root/out> ...` to set these.
       - Logs are time-stamped and auto-renamed by madym, e.g. `madym_T1_{date}_{time}_{log}`
         where `{log}` is the value of the `--program_log option`. This wrapper renames them
-        to a consistent name, e.g. `madym_T1_{method}.log`
+        to a consistent `madym_T1_{method}.log`. The same applies to the audit log, and the
+        (override) config file, resp. `madym_T1_{method}.audit`, and `madym_T1_{method}.cfg`.
 
 hints:
   DockerRequirement:
@@ -26,17 +35,15 @@ hints:
   SoftwareRequirement:
     packages:
       - package: madym_T1
-        version: [ "v4.15.1" ]
+        version: [ "v4.23.0" ]
 
 requirements:
   InlineJavascriptRequirement: {}
 
-baseCommand: madym_T1
+baseCommand: $MADYM_ROOT/madym_T1
 arguments:
   - prefix: "--cwd"
     valueFrom: $(runtime.outdir)
-  - prefix: "--img_fmt_r"
-    valueFrom: $(inputs.T1_vols[0].format)
   - prefix: "--output_root"
     valueFrom: $(runtime.outdir)
   - prefix: "--output"
@@ -47,26 +54,42 @@ arguments:
   - "--program_log cwl.log" # see NOTES
   - "--config_out cwl.conf" # see NOTES
   - "--overwite 1"
-
+  
 inputs:
   T1_vols:
-    label: Filepaths to input signal volumes
-    doc: e.g. from Variable Flip Angles
-    type: File[]
-    secondaryFiles:
-      - ^.json
-    format:
-      - NIFTI
-      - NIFTI_GZ
-      - ANALYZE
-      - ANALYZE_SPARSE
-      - DICOM # not implemented?
-      # TODO: use edam ontology for formats? would need parsing to pass to madym
-      #   NIFTI = edam:format_4001, DICOM = edam:format_3548, the rest seem not to be in edam
+    label: File paths to input signal volumes
+    type: Directory[]
     inputBinding:
       prefix: --T1_vols
+  img_fmt_r:
+    label: Image format of input signal volumes
+    doc: |
+      NIFTI_GZ / NIFTI will read all compressed and uncompressed NIFTI, and ANALYZE images 
+      However, `img_fmt_r` gets mapped as the default for `img_fmt_w` where the choice does matter:
+      - NIFTI_GZ (default) .nii.gz compressed NIFTI images (recommended, specially for masked images)
+      - NIFTI .nii uncompressed NIFTI images
+      - ANALYZE (.hdr, .img) pairs in the old Analyze 7.5 format
+      For DICOM inputs use the `madym_DicomConvert` tool to generate NIFTI images first.
+    default: NIFTI_GZ
+    type:
+      type: enum
+      symbols:
+        - NIFTI
+        - NIFTI_GZ
+        - ANALYZE
+        - ANALYZE_SPARSE # undocumented
+        # TODO: use edam ontology for formats? would need parsing to pass to madym
+        #   NIFTI = edam:format_4001, DICOM = edam:format_3548, the rest seem not to be in edam
+    inputBinding:
+      prefix: --img_fmt_r
   img_fmt_w:
     label: Image format for writing output
+    doc: |
+      Format of images to write out (the default is to use `img_fmt_r`):
+      - NIFTI_GZ generates .nii.gz compressed NIFTI images (recommended, specially for masked images)
+      - NIFTI generates .nii uncompressed NIFTI images
+      - ANALYZE generates (.hdr, .img) pairs in the old Analyze 7.5 format
+      For DICOM output, use external tools to convert from NIFTI / NIFTI_GZ
     default: $(inputs.img_fmt_r)
     type:
       type: enum
@@ -74,8 +97,7 @@ inputs:
         - NIFTI
         - NIFTI_GZ
         - ANALYZE
-        - ANALYZE_SPARSE
-        - DICOM # not implemented?
+        - ANALYZE_SPARSE # undocumented
     inputBinding:
       prefix: --img_fmt_w
   T1_method:
@@ -131,10 +153,9 @@ inputs:
     # format: ??
     inputBinding:
       prefix: --err
-  # {nifti_4D, nifti_scaling, and use_BIDS} are not in `madym_T1 -h`
-  # but are passed by the python wrapper
   nifti_4D:
-    label: Read NIFTI 4D images for T1 mapping and dynamic inputs
+    label: Read NIFTI 4D images for T1 mapping and dynamic inputs (default TRUE)
+    default: true
     type: boolean?
     inputBinding:
       prefix: "--nifti_4D 1"
@@ -144,7 +165,8 @@ inputs:
     inputBinding:
       prefix: "--nifti_scaling 1"
   use_BIDS:
-    label: Write images using BIDS json meta info
+    label: Read/Write images using BIDS json meta info (default TRUE)
+    default: true
     type: boolean?
     inputBinding:
       prefix: "--use_BIDS 1"
@@ -195,7 +217,7 @@ outputs:
   config:
     type: File
     outputBinding:
-      glob: "*!(*override*)cwl.cfg" # ignore override config
+      glob: "*override_cwl.cfg" # there's another cfg with all options, currently ignored
       outputEval: ${self[0].basename = "madym_T1_" + inputs.T1_method + ".cfg"; return self;}
   audit:
     type: File
