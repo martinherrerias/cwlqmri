@@ -38,29 +38,39 @@ hints:
         version: [ "v4.23.0" ]
 
 requirements:
-  InlineJavascriptRequirement: {}
+  - class: InlineJavascriptRequirement
+  - class: ShellCommandRequirement
+  - class: InitialWorkDirRequirement
+    listing: $(inputs.T1_vols)
 
-baseCommand: $MADYM_ROOT/madym_T1
+baseCommand: /madym_build/bin/madym_T1
 arguments:
-  - prefix: "--cwd"
+  # - prefix: --cwd
+  #   valueFrom: $(runtime.outdir)
+  - prefix: --output_root
     valueFrom: $(runtime.outdir)
-  - prefix: "--output_root"
-    valueFrom: $(runtime.outdir)
-  - prefix: "--output"
+  - prefix: --output
     valueFrom: ""
-  - prefix: "--audit_dir"
+  - prefix: --audit_dir
     valueFrom: $(runtime.outdir)
-  - "--audit_log cwl.audit" # see NOTES
-  - "--program_log cwl.log" # see NOTES
-  - "--config_out cwl.conf" # see NOTES
-  - "--overwite 1"
+  - prefix: --audit
+    valueFrom: cwl.audit # see NOTES
+  - prefix: --program_log
+    valueFrom: cwl.log # see NOTES
+  - prefix: --config_out
+    valueFrom: cwl.cfg # see NOTES
+  - prefix: --overwrite
+    valueFrom: "1"
   
 inputs:
   T1_vols:
     label: File paths to input signal volumes
-    type: Directory[]
+    type: File[]
+    secondaryFiles: ^^.json
     inputBinding:
       prefix: --T1_vols
+      valueFrom: |
+        [$(inputs.T1_vols.map(function(v){return "'" + v.basename + "'";}).join(', '))]
   img_fmt_r:
     label: Image format of input signal volumes
     doc: |
@@ -90,16 +100,21 @@ inputs:
       - NIFTI generates .nii uncompressed NIFTI images
       - ANALYZE generates (.hdr, .img) pairs in the old Analyze 7.5 format
       For DICOM output, use external tools to convert from NIFTI / NIFTI_GZ
-    default: $(inputs.img_fmt_r)
     type:
       type: enum
       symbols:
+        - "" # default to img_fmt_r
         - NIFTI
         - NIFTI_GZ
         - ANALYZE
         - ANALYZE_SPARSE # undocumented
+    # default: $(inputs.img_fmt_r) doesn't work, so we use valueFrom expression (below)
+    default: ""
     inputBinding:
       prefix: --img_fmt_w
+      valueFrom: |
+        $(self? self : inputs.img_fmt_r)
+
   T1_method:
     label: Method used for baseline T1 mapping
     doc: |
@@ -158,29 +173,34 @@ inputs:
     default: true
     type: boolean?
     inputBinding:
-      prefix: "--nifti_4D 1"
+      prefix: --nifti_4D 1
+      shellQuote: false
   nifti_scaling:
     label: Apply intensity scaling and offset when reading/writing NIFTI images
     type: boolean?
     inputBinding:
-      prefix: "--nifti_scaling 1"
+      prefix: --nifti_scaling 1
+      shellQuote: false
   use_BIDS:
     label: Read/Write images using BIDS json meta info (default TRUE)
     default: true
     type: boolean?
     inputBinding:
-      prefix: "--use_BIDS 1"
+      prefix: --use_BIDS 1
+      shellQuote: false
   voxel_size_warn_only:
     label: warning only if image sizes do not match
     doc:  Only throw a warning (instead of error) if input image voxel sizes do not match
     type: boolean?
     inputBinding:
-      prefix: "--voxel_size_warn_only 1"
+      prefix: --voxel_size_warn_only 1
+      shellQuote: false
   no_log:
     label: Switch off program logging
     type: boolean?
     inputBinding:
-      prefix: "--no_log 1"
+      prefix: --no_log 1
+      shellQuote: false
   quiet:
     label: Do not display logging messages in cout
     type: boolean?
@@ -190,7 +210,8 @@ inputs:
     label: Switch off audit logging
     type: boolean?
     inputBinding:
-      prefix: "--no_audit 1"
+      prefix: --no_audit 1
+      shellQuote: false
 
 outputs:
   efficiency_map:
@@ -209,21 +230,18 @@ outputs:
     type: File
     outputBinding:
       glob: "error_tracker.*"
-  log:
-    type: File
+  logs:
+    type: File[]
     outputBinding:
-      glob: "*cwl.log"
-      outputEval: ${self[0].basename = "madym_T1_" + inputs.T1_method + ".log"; return self;}
-  config:
-    type: File
-    outputBinding:
-      glob: "*override_cwl.cfg" # there's another cfg with all options, currently ignored
-      outputEval: ${self[0].basename = "madym_T1_" + inputs.T1_method + ".cfg"; return self;}
-  audit:
-    type: File
-    outputBinding:
-      glob: "*cwl.audit"
-      outputEval: ${self[0].basename = "madym_T1_" + inputs.T1_method + ".audit"; return self;}
+      glob: madym_T1_*_cwl.*
+      outputEval: | # Remove timestamps: madym_T1_{date}_{time}_cwl.{ext} -> madym_T1_{method}.{ext}
+        ${
+          self.forEach(function(f) {
+            f.basename = f.basename.replace(/\d{8}_\d{6}/, inputs.T1_method).replace(/_cwl/, "");
+            return f;
+          });
+          return self;
+        }
 
 # $namespaces:
 #   edam: http://edamontology.org/
