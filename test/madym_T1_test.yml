@@ -1,6 +1,6 @@
 # This file must be in the test-data directory, so that the realtive paths to T1_vols are correct
 # Run with:
-#   cwltool [--outdir OUT --verbose --cachedir TMP] madymT1.cwl DATA/madym_T1_test.yml
+#   cwltool [--outdir OUT --verbose --cachedir TMP] madym_T1.cwl DATA/madym_T1_test.yml
 
 T1_method: IR_E
 no_audit: true
