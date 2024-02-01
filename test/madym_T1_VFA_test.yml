@@ -1,0 +1,19 @@
+# This file must be in the test-data directory, so that the realtive paths to T1_vols are correct
+# Run with:
+#   cwltool [--outdir OUT --verbose --cachedir TMP] madym_T1.cwl DATA/madym_T1_VFA_test.yml
+
+T1_method: VFA
+no_audit: true
+T1_vols:
+  - class: File
+    format: NIFTI_GZ
+    path: VFA/VFA_2_echo1.nii.gz
+  - class: File
+    format: NIFTI_GZ
+    path: VFA/VFA_5_echo1.nii.gz
+  - class: File
+    format: NIFTI_GZ
+    path: VFA/VFA_15_echo1.nii.gz
+  - class: File
+    format: NIFTI_GZ
+    path: VFA/VFA_30_echo1.nii.gz
