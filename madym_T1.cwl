@@ -31,7 +31,7 @@ doc: |
 
 hints:
   DockerRequirement:
-    dockerPull: registry.gitlab.com/manchester_qbi/manchester_qbi_public/madym_cxx/madym_release_no_gui:u22.04
+    dockerPull: ghcr.io/uomresearchit/radnet/preclinicalmri/core_pipelines:latest
   SoftwareRequirement:
     packages:
       - package: madym_T1
@@ -43,7 +43,7 @@ requirements:
   - class: InitialWorkDirRequirement
     listing: $(inputs.T1_vols)
 
-baseCommand: /madym_build/bin/madym_T1
+baseCommand: madym_T1
 arguments:
   # - prefix: --cwd
   #   valueFrom: $(runtime.outdir)
