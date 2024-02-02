@@ -1,0 +1,17 @@
+# This file must be in the test-data directory, so that the realtive paths 
+# to input files/directories are correct
+# Run with:
+#   cwltool [--outdir OUT --cachedir TMP] DCE_deltaCt.cwl DATA/DCE_deltaCt_test.yml
+
+dce_path:
+    class: File
+    path: dce/dce_dyn_echo1.nii.gz
+T1_path:
+    class: File
+    path: madym_output/T1_VFA/T1.nii.gz
+dce_limits: [2, 9, 11, 15]
+relax_coeff: 0
+average_fun: median
+alternative: less
+equal_var: true
+no_log: false
