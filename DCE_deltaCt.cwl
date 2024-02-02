@@ -13,6 +13,17 @@ doc: |
       - Wrapped function: <https://gitlab.com/manchester_qbi/preclinical_mri/core_pipelines/-/blob/main/src/PreclinicalMRI/dynamic/dce.py>
 
     NOTES:
+    - The following defaults override the defaults:
+        - `dce_path` is a file, from which the base-name (passed as argument)
+          and extension (used to set `dce_im_ext`) are extracted.
+        - `dce_meta_ext` is hard-set to '.json', as current implementation does
+          not support any other file types (uses json.load).
+        - `no_audit` is set to 1
+      - Settings like `data_dir`, `output_dir`, `maps_dir`, `overwrite`
+        are set to work with CWL, e.g.:
+          `cwltool --basedir <base/dir> --outdir <root/out> ...`
+      - Logs are time-stamped and auto-renamed by QbiRunner. 
+        This wrapper renames them to a consistent `DCE_deltaCt.<ext>`.
 
 hints:
   DockerRequirement:
@@ -20,16 +31,34 @@ hints:
 
 requirements:
   - class: InlineJavascriptRequirement
+    expressionLib:
+    - |
+      // return (composed) file extension, e.g. '.nii.gz'
+      function extension2(file) {
+          var match = file.basename.match(/([^.]*)(\.[a-z.]*)$/i);
+          return match ? match[2] : '';
+      }
+    - |
+      // return nameroot without (composed) extension
+      function nameroot2(file) {
+          var match = file.basename.match(/([^.]*)(\.[a-z.]*)$/i);
+          return match ? match[1] : '';
+      }
   - class: ShellCommandRequirement
   - class: InitialWorkDirRequirement
     listing: 
       - $(inputs.dce_path)
+      - $(inputs.T1_path)
 
-baseCommand: python -m PreclinicalMRI.pipelines.qMRI_processes.DCE_deltaCt
+baseCommand: python
 arguments:
+  - prefix: -m
+    valueFrom: PreclinicalMRI.pipelines.qMRI_processes.DCE_deltaCt
   # - prefix: --data_dir
   #   valueFrom: $(runtime.outdir)
   - prefix: --output_dir
+    valueFrom: $(runtime.outdir)
+  - prefix: --maps_dir
     valueFrom: $(runtime.outdir)
   # - prefix: --audit_dir
   #   valueFrom: $(runtime.outdir)
@@ -43,15 +72,21 @@ arguments:
     valueFrom: "1"
   - prefix: --no_audit
     valueFrom: "1"
-  
+  - prefix: --dce_im_ext
+    valueFrom: $( extension2(inputs.dce_path) )
+  - prefix: --dce_meta_ext
+    valueFrom: .json # see NOTES
+
 inputs:
   dce_path:
     label: Path to DCE data
     doc: |
-      Relative path to the DCE data S(t), default 'dynamic'
-    type: Directory
+      Relative path to the DCE data S(t), e.g. 'dce/dyn.nii.gz'
+    type: File
+    secondaryFiles: ^^.json # see NOTES
     inputBinding:
       prefix: --dce_path
+      valueFrom: $( nameroot2(self) )
   dce_limits:
     label: Baseline and enhancing time periods [B0, B1, E0, E1]
     doc: |
@@ -60,20 +95,6 @@ inputs:
     type: int[]
     inputBinding:
       prefix: --dce_limits
-      valueFrom: |
-        [$(inputs.dce_limits.join(', '))]
-  dce_im_ext:
-    label: File extension for the DCE data
-    default: .nii.gz
-    type: string
-    inputBinding:
-      prefix: --dce_im_ext
-  dce_meta_ext:
-    label: File extension for the DCE meta data
-    default: .json
-    type: string
-    inputBinding:
-      prefix: --dce_meta_ext
   T1_path:
     label: Path to T1 map
     doc: Relative path to the T1 map (required)
@@ -124,12 +145,6 @@ inputs:
     inputBinding:
       prefix: --equal_var 1
       shellQuote: false
-  maps_dir:
-    label: Location of saved output maps, relative to data_dir
-    default: DCE_output_maps
-    type: Directory
-    inputBinding:
-      prefix: --maps_dir
   no_log:
     label: Switch off program logging
     type: boolean?
