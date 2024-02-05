@@ -1,12 +1,12 @@
 #! /bin/bash
 # Usage: run_tests.sh [TESTSEQ]
 # Run tests for *.cwl Command Line Tools
-# TESTSEQ: test sequence, default "all" = IRE VFA deltaCt
+# TESTSEQ: test sequence, default "all" = IRE VFA deltaCt deltaR1
 
 cd "$( dirname "${BASH_SOURCE[0]}" )"
 
 TESTSEQ=${1:-"all"}
-[[ $TESTSEQ == "all" ]] && TESTSEQ="IRE VFA deltaCt"
+[[ $TESTSEQ == "all" ]] && TESTSEQ="IRE VFA deltaCt deltaR1"
 
 cmd="--cachedir cache"
 
@@ -20,6 +20,10 @@ for TEST in ${TESTSEQ[@]}; do
     deltaCt)
       input=DCE_${TEST}_test.yml
       tool=../DCE_${TEST}.cwl
+      ;;
+    deltaR1)
+      input=OE_${TEST}_test.yml
+      tool=../OE_${TEST}.cwl
       ;;
     *)
       echo "Invalid TEST: ${TEST}"

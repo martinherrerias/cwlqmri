@@ -1,0 +1,19 @@
+# This file must be in the test-data directory, so that the realtive paths 
+# to input files/directories are correct
+# Run with:
+#   cwltool [--outdir OUT --cachedir TMP] DCE_deltaCt.cwl DATA/DCE_deltaCt_test.yml
+
+oe_path:
+    class: File
+    path: data/oe/oe_dyn.nii.gz
+T1_path:
+    class: File
+    path: output/IRE/T1.nii.gz
+efficiency_path:
+    class: File
+    path: output/IRE/efficiency.nii.gz
+oe_limits: [2, 8, 10, 16] 
+average_fun: median
+alternative: less
+equal_var: true
+no_log: false
