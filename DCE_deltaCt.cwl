@@ -25,6 +25,8 @@ doc: |
       - Logs are time-stamped and auto-renamed by QbiRunner. 
         This wrapper renames them to a consistent `DCE_deltaCt.<ext>`.
 
+    SEE ALSO: OE_deltaR1.cwl, madym_DCE.cwl
+
 hints:
   DockerRequirement:
     dockerPull: ghcr.io/uomresearchit/radnet/preclinicalmri/core_pipelines:latest
@@ -32,18 +34,7 @@ hints:
 requirements:
   - class: InlineJavascriptRequirement
     expressionLib:
-    - |
-      // return (composed) file extension, e.g. '.nii.gz'
-      function extension2(file) {
-          var match = file.basename.match(/([^.]*)(\.[a-z.]*)$/i);
-          return match ? match[2] : '';
-      }
-    - |
-      // return nameroot without (composed) extension
-      function nameroot2(file) {
-          var match = file.basename.match(/([^.]*)(\.[a-z.]*)$/i);
-          return match ? match[1] : '';
-      }
+    - { $include: utils.js }
   - class: ShellCommandRequirement
   - class: InitialWorkDirRequirement
     listing: 
