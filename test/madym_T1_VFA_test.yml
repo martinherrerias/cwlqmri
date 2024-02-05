@@ -7,13 +7,13 @@ no_audit: true
 T1_vols:
   - class: File
     format: NIFTI_GZ
-    path: VFA/VFA_2_echo1.nii.gz
+    path: data/VFA/VFA_2_echo1.nii.gz
   - class: File
     format: NIFTI_GZ
-    path: VFA/VFA_5_echo1.nii.gz
+    path: data/VFA/VFA_5_echo1.nii.gz
   - class: File
     format: NIFTI_GZ
-    path: VFA/VFA_15_echo1.nii.gz
+    path: data/VFA/VFA_15_echo1.nii.gz
   - class: File
     format: NIFTI_GZ
-    path: VFA/VFA_30_echo1.nii.gz
+    path: data/VFA/VFA_30_echo1.nii.gz

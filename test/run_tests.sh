@@ -1,49 +1,42 @@
 #! /bin/bash
-# Usage: run_tests.sh DATA [TEST]
+# Usage: run_tests.sh [TESTSEQ]
 # Run tests for *.cwl Command Line Tools
-# DATA: directory containing input data
-# TEST: test to run (IRE, VFA, deltaCt, all)
+# TESTSEQ: test sequence, default "all" = IRE VFA deltaCt
 
-cd "$(git rev-parse --show-toplevel)"
+cd "$( dirname "${BASH_SOURCE[0]}" )"
 
-DATA=$1
-if [ ! -d "$DATA" ]; then
-  echo "Invalid DATA directory: $DATA"
-  exit 1
-fi
+TESTSEQ=${1:-"all"}
+[[ $TESTSEQ == "all" ]] && TESTSEQ="IRE VFA deltaCt"
 
-TEST=${2:-all}
+cmd="--cachedir cache"
 
-cmd="--cachedir test/cache"
+for TEST in ${TESTSEQ[@]}; do
 
-case $TEST in
-  IRE|VFA)
-    input=madym_T1_${TEST}_test.yml
-    tool=madym_T1.cwl
-    ;;
-  deltaCt)
-    input=DCE_${TEST}_test.yml
-    tool=DCE_${TEST}.cwl
-    ;;
-  all)
-    for f in test/*.yml; do
-      # extract key from test/*_<key>_test.yml
-      key=${f%_test.yml}
-      key=${key##*_}
-      [[ -z "$key" ]] && continue
-      . test/run_tests.sh "${DATA}" ${key}
-    done
-    exit 0
-    ;;
-  *)
-    echo "Invalid TEST: ${TEST}"
+  case $TEST in
+    IRE|VFA)
+      input=madym_T1_${TEST}_test.yml
+      tool=../madym_T1.cwl
+      ;;
+    deltaCt)
+      input=DCE_${TEST}_test.yml
+      tool=../DCE_${TEST}.cwl
+      ;;
+    *)
+      echo "Invalid TEST: ${TEST}"
+      exit 1
+      ;;
+  esac
+
+  mkdir -p output/${TEST}
+  echo Running: cwltool ${tool} ${input}
+  cwltool --outdir output/${TEST} \
+          --cachedir cache ${tool} \
+          ${input} > output/${TEST}/cwl.log 2>&1
+
+  if [ $? -eq 0 ]; then
+    echo "Test ${TEST} passed"
+  else
+    echo "Test ${TEST} failed! See output/${TEST}/cwl.log for details."
     exit 1
-    ;;
-esac
-
-mkdir -p test/output/${TEST}
-echo Running: cwltool ${tool} ${input}
-cp test/${input} ${DATA}
-cwltool --outdir test/output/${TEST} \
-        --cachedir test/cache ${tool} \
-        ${DATA}/${input} > test/output/${TEST}/cwl.log 2>&1
+  fi
+done

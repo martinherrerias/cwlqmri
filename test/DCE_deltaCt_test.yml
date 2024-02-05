@@ -5,10 +5,10 @@
 
 dce_path:
     class: File
-    path: dce/dce_dyn_echo1.nii.gz
+    path: data/dce/dce_dyn_echo1.nii.gz
 T1_path:
     class: File
-    path: madym_output/T1_VFA/T1.nii.gz
+    path: output/VFA/T1.nii.gz
 dce_limits: [2, 9, 11, 15]
 relax_coeff: 0
 average_fun: median

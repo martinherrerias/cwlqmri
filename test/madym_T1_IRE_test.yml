@@ -7,19 +7,19 @@ no_audit: true
 T1_vols:
   - class: File
     format: NIFTI_GZ
-    path: IR/OE_400.nii.gz
+    path: data/IR/OE_400.nii.gz
   - class: File
     format: NIFTI_GZ
-    path: IR/OE_800.nii.gz
+    path: data/IR/OE_800.nii.gz
   - class: File
     format: NIFTI_GZ
-    path: IR/OE_1000.nii.gz
+    path: data/IR/OE_1000.nii.gz
   - class: File
     format: NIFTI_GZ
-    path: IR/OE_1500.nii.gz
+    path: data/IR/OE_1500.nii.gz
   - class: File
     format: NIFTI_GZ
-    path: IR/OE_2000.nii.gz
+    path: data/IR/OE_2000.nii.gz
   - class: File
     format: NIFTI_GZ
-    path: IR/OE_2500.nii.gz
+    path: data/IR/OE_2500.nii.gz
