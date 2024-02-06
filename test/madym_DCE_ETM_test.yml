@@ -1,9 +1,10 @@
 nifti_4D: true
 img_fmt_r: NIFTI_GZ
 img_fmt_w: NIFTI_GZ
-dyn: 
-  - class: File
-    path: data/dce/dce_dyn_echo1.nii.gz
+dyn_dir:
+  class: Directory
+  location: data/dce
+dyn: dce_dyn_echo1.nii.gz
 T1: 
   class: File
   path: output/VFA/T1.nii.gz
@@ -29,7 +30,7 @@ test_enh: true
 
 use_BIDS: true
 overwrite: true
-no_audit: false
-Ct_mod: true
-Ct_sig: true
-iauc_peak: true
+no_audit: true
+Ct_mod: false
+Ct_sig: false
+iauc_peak: false

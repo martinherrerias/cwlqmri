@@ -43,8 +43,6 @@ hints:
 requirements:
   InlineJavascriptRequirement: {}
   ShellCommandRequirement: {}
-  InitialWorkDirRequirement:
-    listing: $(inputs.T1_vols)
   SchemaDefRequirement:
     types:
       - $import: custom_types.yml
@@ -93,8 +91,7 @@ inputs:
       prefix: --nifti_4D
   dyn_dir:
     label: Folder containing dynamic volumes
-    type: Directory?
-    default: ""
+    type: Directory
     inputBinding:
       prefix: --dyn_dir
   dyn:
@@ -447,10 +444,11 @@ inputs:
   img_fmt_w:
     label: Image format for writing output
     type: custom_types.yml#image_format?
+    # default: $(inputs.img_fmt_r)
     inputBinding:
       prefix: --img_fmt_w
       valueFrom: |
-        $(self? self : inputs.img_fmt_r) # default: $(inputs.img_fmt_r)
+        $(self? self : inputs.img_fmt_r)
   nifti_scaling:
     label: Apply intensity scaling and offset when reading/writing NIFTI images
     type: boolean?
@@ -482,58 +480,55 @@ inputs:
   no_audit:
     label: Switch off audit logging
     type: boolean?
+    default: true
     inputBinding:
       prefix: --no_audit
 
 outputs:
-  # C_t:
-  #   type: File[]
-  #   outputBinding:
-  #     glob: "C_t.*"
-  # C_baseline:
-  #   type: File[]
-  #   outputBinding:
-  #     glob: "C_baseline.*"
-  # C_enhancing:
-  #   type: File[]
-  #   outputBinding:
-  #     glob: "C_enhancing.*"
-  # C_p_vals:
-  #   type: File[]
-  #   outputBinding:
-  #     glob: "C_p_vals.*"
-  # S_p_vals:
-  #   type: File[]
-  #   outputBinding:
-  #     glob: "S_p_vals.*"
-  # delta_Ct:
-  #   type: File[]
-  #   outputBinding:
-  #     glob: "delta_Ct.*"
-  # efficiency_map:
-  #   type: File[]
-  #   outputBinding:
-  #     glob: "efficiency.*"
-  # T1_map:
-  #   type: File[]
-  #   outputBinding:
-  #     glob: "T1.*"
-  # M0_map:
-  #   type: File[]
-  #   outputBinding:
-  #     glob: "M0.*"
-  # error_tracker:
-  #   type: File
-  #   outputBinding:
-  #     glob: "error_tracker.*"
+  IAUC:
+    type: File[]
+    outputBinding:
+      glob: "IAUC*"
+  Ktrans:
+    type: File
+    outputBinding:
+      glob: "Ktrans*"
+  enhVox:
+    type: File[]
+    outputBinding:
+      glob: "enhVox*"
+  error_tracker:
+    type: File
+    outputBinding:
+      glob: "error_tracker*"
+  residuals:
+    type: File
+    outputBinding:
+      glob: "residuals*"
+  stats:
+    type: File[]
+    outputBinding:
+      glob: "*.csv"
+  Ct_mod:
+    type: File[]?
+    outputBinding:
+      glob: "Ct_mod/Ct_mod*"
+  Ct_sig:
+    type: File[]?
+    outputBinding:
+      glob: "Ct_sig/Ct_sig*"
+  params:
+    type: File[]
+    outputBinding:
+      glob: "*.nii.gz"
   logs:
     type: File[]
     outputBinding:
-      glob: madym_T1_*_cwl.*
-      outputEval: | # Remove timestamps: madym_T1_{date}_{time}_cwl.{ext} -> madym_T1_{method}.{ext}
+      glob: "madym_DCE_*_cwl.*"
+      outputEval: | # Remove timestamps: *_{date}_{time}_cwl.{ext} -> *_{method}.{ext}
         ${
           self.forEach(function(f) {
-            f.basename = f.basename.replace(/\d{8}_\d{6}/, inputs.T1_method).replace(/_cwl/, "");
+            f.basename = f.basename.replace(/\d{8}_\d{6}/, inputs.model).replace(/_cwl/, "");
             return f;
           });
           return self;
