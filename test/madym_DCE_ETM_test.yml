@@ -1,0 +1,35 @@
+nifti_4D: true
+img_fmt_r: NIFTI_GZ
+img_fmt_w: NIFTI_GZ
+dyn: 
+  - class: File
+    path: data/dce/dce_dyn_echo1.nii.gz
+T1: 
+  class: File
+  path: output/VFA/T1.nii.gz
+Ct: false
+
+M0_ratio: true
+err: 
+  class: File
+  path: output/VFA/error_tracker.nii.gz
+
+model: ETM
+dose: 0.05
+hct: 0.42
+iauc: [60,90,120]
+inj: 7
+last: 0
+max_iter: 0
+opt_type: LLS
+repeat_param: 4
+repeat_values: [0, 0.1, 0.2, 0.3, 0.4, 0.5]
+r1: 3.4
+test_enh: true
+
+use_BIDS: true
+overwrite: true
+no_audit: false
+Ct_mod: true
+Ct_sig: true
+iauc_peak: true

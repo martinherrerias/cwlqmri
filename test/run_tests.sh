@@ -6,7 +6,7 @@
 cd "$( dirname "${BASH_SOURCE[0]}" )"
 
 TESTSEQ=${@:-"all"}
-[[ $TESTSEQ == "all" ]] && TESTSEQ="IRE VFA deltaCt deltaR1"
+[[ $TESTSEQ == "all" ]] && TESTSEQ="IRE VFA deltaCt deltaR1 ETM"
 
 cmd="--cachedir cache"
 
@@ -25,6 +25,10 @@ for TEST in ${TESTSEQ[@]}; do
     deltaR1)
       input=OE_${TEST}_test.yml
       tool=../OE_${TEST}.cwl
+      ;;
+    ETM)
+      input=madym_DCE_ETM_test.yml
+      tool=../madym_DCE.cwl
       ;;
     *)
       echo "Invalid TEST: ${TEST}"
