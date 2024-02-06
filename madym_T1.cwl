@@ -38,11 +38,13 @@ hints:
         version: [ "v4.23.0" ]
 
 requirements:
-  - class: InlineJavascriptRequirement
-  - class: ShellCommandRequirement
-  - class: InitialWorkDirRequirement
+  InlineJavascriptRequirement: {}
+  ShellCommandRequirement: {}
+  InitialWorkDirRequirement:
     listing: $(inputs.T1_vols)
-
+  SchemaDefRequirement:
+    types:
+      - $import: custom_types.yml
 baseCommand: madym_T1
 arguments:
   # - prefix: --cwd
@@ -69,47 +71,20 @@ inputs:
     secondaryFiles: ^^.json
     inputBinding:
       prefix: --T1_vols
-      valueFrom: |
-        [$(inputs.T1_vols.map(function(v){return "'" + v.basename + "'";}).join(', '))]
+      itemSeparator: ", "
   img_fmt_r:
     label: Image format of input signal volumes
     doc: |
       NIFTI_GZ / NIFTI will read all compressed and uncompressed NIFTI, and ANALYZE images 
-      However, `img_fmt_r` gets mapped as the default for `img_fmt_w` where the choice does matter:
-      - NIFTI_GZ (default) .nii.gz compressed NIFTI images (recommended, specially for masked images)
-      - NIFTI .nii uncompressed NIFTI images
-      - ANALYZE (.hdr, .img) pairs in the old Analyze 7.5 format
-      For DICOM inputs use the `madym_DicomConvert` tool to generate NIFTI images first.
+      However, `img_fmt_r` gets mapped as the default for `img_fmt_w` where the choice does matter.
     default: NIFTI_GZ
-    type:
-      type: enum
-      symbols:
-        - NIFTI
-        - NIFTI_GZ
-        - ANALYZE
-        - ANALYZE_SPARSE # undocumented
-        # TODO: use edam ontology for formats? would need parsing to pass to madym
-        #   NIFTI = edam:format_4001, DICOM = edam:format_3548, the rest seem not to be in edam
+    type: custom_types.yml#image_format?
     inputBinding:
       prefix: --img_fmt_r
   img_fmt_w:
     label: Image format for writing output
-    doc: |
-      Format of images to write out (the default is to use `img_fmt_r`):
-      - NIFTI_GZ generates .nii.gz compressed NIFTI images (recommended, specially for masked images)
-      - NIFTI generates .nii uncompressed NIFTI images
-      - ANALYZE generates (.hdr, .img) pairs in the old Analyze 7.5 format
-      For DICOM output, use external tools to convert from NIFTI / NIFTI_GZ
-    type:
-      type: enum
-      symbols:
-        - "" # default to img_fmt_r
-        - NIFTI
-        - NIFTI_GZ
-        - ANALYZE
-        - ANALYZE_SPARSE # undocumented
-    # default: $(inputs.img_fmt_r) doesn't work, so we use valueFrom expression (below)
-    default: ""
+    type: custom_types.yml#image_format?
+    # default: $(inputs.img_fmt_r), see valueFrom expression (below)
     inputBinding:
       prefix: --img_fmt_w
       valueFrom: |
@@ -117,19 +92,8 @@ inputs:
 
   T1_method:
     label: Method used for baseline T1 mapping
-    doc: |
-      VFA - Variable Flip-Angle
-      VFA_B1 - Variable Flip-Angle (B1 corrected)
-      IR - Inversion Recovery
-      IR_E - Inversion Recovery (with efficiency weighting)
     default: IR_E
-    type: 
-      type: enum
-      symbols:
-        - VFA
-        - VFA_B1
-        - IR
-        - IR_E
+    type: custom_types.yml#T1_method
     inputBinding:
       prefix: --T1_method
   T1_noise:
@@ -173,34 +137,29 @@ inputs:
     default: true
     type: boolean?
     inputBinding:
-      prefix: --nifti_4D 1
-      shellQuote: false
+      prefix: --nifti_4D
   nifti_scaling:
     label: Apply intensity scaling and offset when reading/writing NIFTI images
     type: boolean?
     inputBinding:
-      prefix: --nifti_scaling 1
-      shellQuote: false
+      prefix: --nifti_scaling
   use_BIDS:
     label: Read/Write images using BIDS json meta info (default TRUE)
     default: true
     type: boolean?
     inputBinding:
-      prefix: --use_BIDS 1
-      shellQuote: false
+      prefix: --use_BIDS
   voxel_size_warn_only:
     label: warning only if image sizes do not match
     doc:  Only throw a warning (instead of error) if input image voxel sizes do not match
     type: boolean?
     inputBinding:
-      prefix: --voxel_size_warn_only 1
-      shellQuote: false
+      prefix: --voxel_size_warn_only
   no_log:
     label: Switch off program logging
     type: boolean?
     inputBinding:
-      prefix: --no_log 1
-      shellQuote: false
+      prefix: --no_log
   quiet:
     label: Do not display logging messages in cout
     type: boolean?
@@ -210,19 +169,18 @@ inputs:
     label: Switch off audit logging
     type: boolean?
     inputBinding:
-      prefix: --no_audit 1
-      shellQuote: false
+      prefix: --no_audit
 
 outputs:
-  efficiency_map:
+  efficiency:
     type: File[]
     outputBinding:
       glob: "efficiency.*"
-  T1_map:
+  T1:
     type: File[]
     outputBinding:
       glob: "T1.*"
-  M0_map:
+  M0:
     type: File[]
     outputBinding:
       glob: "M0.*"

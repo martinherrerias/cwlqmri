@@ -1,0 +1,25 @@
+- type: enum
+  name: image_format
+  label: Image format of input signal volumes
+  doc: |
+    - NIFTI_GZ .nii.gz compressed NIFTI images (recommended, specially for masked images)
+    - NIFTI .nii uncompressed NIFTI images
+    - ANALYZE (.hdr, .img) pairs in the old Analyze 7.5 format
+    For DICOM inputs use the `madym_DicomConvert` tool to generate NIFTI images first.
+  symbols: [ NIFTI_GZ, NIFTI, ANALYZE, ANALYZE_SPARSE ]
+    
+    # TODO: use edam ontology for formats? would need parsing to pass to madym
+    #   NIFTI = edam:format_4001
+    #   DICOM = edam:format_3548
+    #   (!) the rest seem not to be in edam
+
+- type: enum
+  name: T1_method
+  label: Method used for baseline T1 mapping
+  doc: |
+    VFA - Variable Flip-Angle
+    VFA_B1 - Variable Flip-Angle (B1 corrected)
+    IR - Inversion Recovery
+    IR_E - Inversion Recovery (with efficiency weighting)
+  symbols: [ VFA, VFA_B1, IR, IR_E ]
+
