@@ -5,11 +5,12 @@
 
 cd "$( dirname "${BASH_SOURCE[0]}" )"
 
-TESTSEQ=${1:-"all"}
+TESTSEQ=${@:-"all"}
 [[ $TESTSEQ == "all" ]] && TESTSEQ="IRE VFA deltaCt deltaR1"
 
 cmd="--cachedir cache"
 
+echo "Test sequence: ${TESTSEQ}"
 for TEST in ${TESTSEQ[@]}; do
 
   case $TEST in
