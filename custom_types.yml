@@ -23,3 +23,30 @@
     IR_E - Inversion Recovery (with efficiency weighting)
   symbols: [ VFA, VFA_B1, IR, IR_E ]
 
+- type: enum
+  name: optim_method
+  label: Type of optimisation to use
+  doc: |
+    BLEIC - Bayesian Levenberg-Marquardt
+    LLS - Levenberg-Marquardt (fastest but only available for some models)
+    NS - Nelder-Mead Simplex (slowest but most robust)
+  symbols: [ BLEIC, LLS, NS]
+
+- type: enum
+  name: tracer_kinetic_model
+  label: Tracer-kinetic models
+  doc: |
+    Model to fit, specified by its name in CAPITALS:
+    - TM / TOFTS - Tofts Model
+    - ETM - Extended Tofts Model
+    - DIETM - Dual-input Extended Tofts Model
+    - DISCM / MATERNE - Dual-input Single Compartment Model
+    - 2CXM - Two-Compartment Exchange Model
+    - 2CFM - Two-Compartment Filtration Model
+    - DI2CXM - Dual-input Two-Compartment Exchange Model
+    - AUEM / GADOXETATE - Active Upake and Efflux Model
+    - DIBEM / DIIRF - generic Dual-Input Bi-Exponential Models
+    - DIBEM_FP - Dual-Input Bi-Exponential Model with fixed perfusion fraction
+    - PATLAK - Patlak Model
+  # MLDRW - Another implementation of ETM??
+  symbols: [ ETM, TOFTS, DIETM, DISCM, MATERNE, 2CXM, 2CFM, DI2CXM, AUEM, GADOXETATE, DIBEM, DIIRF, PATLAK ]
