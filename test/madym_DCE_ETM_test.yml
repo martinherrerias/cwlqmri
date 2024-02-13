@@ -1,6 +1,5 @@
 nifti_4D: true
 img_fmt_r: NIFTI_GZ
-img_fmt_w: NIFTI_GZ
 dyn_dir:
   class: Directory
   location: data/dce
@@ -29,7 +28,6 @@ r1: 3.4
 test_enh: true
 
 use_BIDS: true
-overwrite: true
 no_audit: true
 Ct_mod: false
 Ct_sig: false

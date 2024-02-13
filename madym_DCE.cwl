@@ -16,21 +16,21 @@ doc: |
       - https://gitlab.com/manchester_qbi/manchester_qbi_public/madym_cxx/-/wikis/madym_DCE
 
     NOTES:
-      - The following defaults override the madym defaults:
-        - `nifti_4D` is set to 1
-        - `nifti_scaling` is set to 1
-        - `use_BIDS` is set to 1
-        - `img_fmt_r`is set to `NIFTI_GZ`
+      - The following override the madym_T1 defaults:
+        - `nifti_4D` defaults to TRUE for NIFTI and NIFTI_GZ `img_fmt_r`
+        - `nifti_scaling` defaults to TRUE
+        - `use_BIDS` defaults to TRUE
+        - `img_fmt_r` defaults to `NIFTI_GZ`
         - `img_fmt_w`is set to track `img_fmt_r`
       - Settings like `data_dir`, `output_dir`, `maps_dir`, `overwrite`
-        are set to work with CWL, e.g.:
+        are set to work with CWL, i.e. reading all inputs from the staging
+        directory, and writing all outputs to the output directory. The actual
+        system paths can be set by the runner, e.g.:
           `cwltool --basedir <base/dir> --outdir <root/out> ...`
-      - Other settings, like `cwd`, `output_root` and `output` are set by the wrapper.
-        Use `cwltool --basedir <base/dir> --outdir <root/out> ...` to set these.
-      - Logs are time-stamped and auto-renamed by madym, e.g. `madym_T1_{date}_{time}_{log}`
-        where `{log}` is the value of the `--program_log option`. This wrapper renames them
-        to a consistent `madym_T1_{method}.log`. The same applies to the audit log, and the
-        (override) config file, resp. `madym_T1_{method}.audit`, and `madym_T1_{method}.cfg`.
+      - Logs are time-stamped and suffixed by madym: `madym_T1_{date}_{time}_{log.ext}`
+        where `{log.ext}` is the value of the `--program_log`, `--config_out`, and
+        `--autit` options, respectively. This wrapper renames them to a consistent
+        `madym_T1_{method}.{ext}`, with extensions `.log`, `.cfg`, and `.audit`.
 
 hints:
   DockerRequirement:
@@ -42,15 +42,14 @@ hints:
 
 requirements:
   InlineJavascriptRequirement: {}
-  ShellCommandRequirement: {}
+  # ShellCommandRequirement: {}
   SchemaDefRequirement:
     types:
       - $import: custom_types.yml
 
 baseCommand: madym_DCE
 arguments:
-  # - prefix: --cwd
-  #   valueFrom: $(runtime.outdir)
+  # See NOTES
   - prefix: --output_root
     valueFrom: $(runtime.outdir)
   - prefix: --output
@@ -58,15 +57,17 @@ arguments:
   - prefix: --audit_dir
     valueFrom: $(runtime.outdir)
   - prefix: --audit
-    valueFrom: cwl.audit # see NOTES
+    valueFrom: cwl.audit # renamed by logs/outputEval
   - prefix: --program_log
-    valueFrom: cwl.log # see NOTES
+    valueFrom: cwl.log # ..
   - prefix: --config_out
-    valueFrom: cwl.cfg # see NOTES
+    valueFrom: cwl.cfg # ..
   - prefix: --overwrite
     valueFrom: "1"
 
 # Deliberately not included
+# -cwd 
+# --Ct_sig_prefix --Ct_mod_prefix
 # --config
   
 inputs:
@@ -85,10 +86,15 @@ inputs:
       Default is TRUE for NIFTI and NIFTI_GZ `img_fmt_r`.
       If set, the following arguments are ignored (see `dyn`):
       `n_dyns`, `sequence_format`, `sequence_start`, `sequence_step`
-    default: $(inputs.img_fmt_r == "NIFTI" || inputs.img_fmt_r == "NIFTI_GZ")
-    type: boolean?
+    type: 
+      - boolean
+      - type: enum
+        symbols: [ "auto" ]
+    default: "auto"
     inputBinding:
       prefix: --nifti_4D
+      valueFrom: |
+        $(self !== "auto" ? self: inputs.img_fmt_r.startsWith("NIFTI"))
   dyn_dir:
     label: Folder containing dynamic volumes
     type: Directory
@@ -142,14 +148,14 @@ inputs:
   roi:
     label: Path to ROI map
     type: File?
-    # format: ??
+    # format: ??, secondaryFiles: ??
     inputBinding:
       prefix: --roi
   err:
     label: Path to existing error tracker map
     doc: if empty, a new map is created
     type: File?
-    # format: ??
+    # format: ??, secondaryFiles: ??
     inputBinding:
       prefix: --err
 
@@ -163,7 +169,13 @@ inputs:
   T1_vols:
     label: File paths to input signal volumes
     type: File[]?
-    secondaryFiles: ^^.json
+    secondaryFiles:
+      - pattern: ^^.json
+        required: $(inputs.img_fmt_r.startsWith("NIFTI"))
+      - pattern: ^.hrd
+        required: $(inputs.img_fmt_r == "ANALYZE")
+      - pattern: ^.xtr
+        required: false
     inputBinding:
       prefix: --T1_vols
       itemSeparator: ", "
@@ -187,13 +199,13 @@ inputs:
   T1:
     label: Path to precomputed T1 map
     type: File?
-    # format: ??
+    # format: ??, secondaryFiles: ??
     inputBinding:
       prefix: --T1
   M0:
     label: Path to precomputed M0 map
     type: File?
-    # format: ??
+    # format: ??, secondaryFiles: ??
     inputBinding:
       prefix: --M0
   r1:
@@ -213,7 +225,7 @@ inputs:
   B1:
     label: Path to B1 correction map
     type: File?
-    # format: ??
+    # format: ??, secondaryFiles: ??
     inputBinding:
       prefix: --B1
   B1_correction:
@@ -227,19 +239,19 @@ inputs:
   aif:  
     label: Path to precomputed AIF, if not set uses Parker population AIF
     type: File?
-    # format: ??
+    # format: ??, secondaryFiles: ??
     inputBinding:
       prefix: --aif
   aif_map:
     label: Map of voxels to average in AIF computation
     type: File?
-    # format: ??
+    # format: ??, secondaryFiles: ??
     inputBinding:
       prefix: --aif_map
   pif:
     label: Path to precomputed PIF, if not set will use Banerji method for deriving from AIF
     type: File?
-    # format: ??
+    # format: ??, secondaryFiles: ??
     inputBinding:
       prefix: --pif
   hct:
@@ -334,7 +346,7 @@ inputs:
   residuals:
     label: Path to model residuals map as a target threshold for new fits
     type: File?
-    # format: ??
+    # format: ??, secondaryFiles: ??
     inputBinding:
       prefix: --residuals
   param_names:
@@ -402,22 +414,12 @@ inputs:
     default: true
     inputBinding:
       prefix: --Ct_sig
-  Ct_sig_prefix:
-    label: Prefix used to name signal-derived dynamic concentration maps
-    type: string?
-    inputBinding:
-      prefix: --Ct_sig_prefix
   Ct_mod:
     label: Save modelled dynamic concentration maps
     type: boolean?
     default: true
     inputBinding:
       prefix: --Ct_mod
-  Ct_mod_prefix:
-    label: Prefix used to name modelled dynamic concentration maps
-    type: string?
-    inputBinding:
-      prefix: --Ct_mod_prefix
   iauc:
     label: Times (in s, post-bolus injection) at which to compute IAUC
     type: int[]?
@@ -443,12 +445,15 @@ inputs:
       prefix: --img_fmt_r
   img_fmt_w:
     label: Image format for writing output
-    type: custom_types.yml#image_format?
-    # default: $(inputs.img_fmt_r)
+    type:
+      - custom_types.yml#image_format
+      - type: enum
+        symbols: [ "same_as_input" ]
+    default: "same_as_input"
     inputBinding:
       prefix: --img_fmt_w
       valueFrom: |
-        $(self? self : inputs.img_fmt_r)
+        $(self !== "same_as_input" ? self : inputs.img_fmt_r)
   nifti_scaling:
     label: Apply intensity scaling and offset when reading/writing NIFTI images
     type: boolean?
@@ -487,40 +492,48 @@ inputs:
 outputs:
   IAUC:
     type: File[]
+    secondaryFiles: [^^.json, ^.hdr, ^.xtr]
     outputBinding:
-      glob: "IAUC*"
+      glob: [IAUC*.nii*, IAUC*.img]
   Ktrans:
     type: File
+    secondaryFiles: [^^.json, ^.hdr, ^.xtr]
     outputBinding:
-      glob: "Ktrans*"
+      glob: [Ktrans.nii*, Ktrans.img]
   enhVox:
-    type: File[]
+    type: File
+    secondaryFiles: [^^.json, ^.hdr, ^.xtr]
     outputBinding:
-      glob: "enhVox*"
+      glob: [enhVox.nii*, enhVox.img]
   error_tracker:
     type: File
-    outputBinding:
-      glob: "error_tracker*"
+    secondaryFiles: [^^.json, ^.hdr, ^.xtr]
+    outputBinding: 
+      glob: [error_tracker.nii*, error_tracker.img]
   residuals:
     type: File
+    secondaryFiles: [^^.json, ^.hdr, ^.xtr]
     outputBinding:
-      glob: "residuals*"
+      glob: [residuals.nii*, residuals.img]
   stats:
     type: File[]
     outputBinding:
-      glob: "*.csv"
+      glob: ["*.txt", "*.csv"]
   Ct_mod:
-    type: File[]?
+    type: File?
+    secondaryFiles: [^^.json, ^.hdr, ^.xtr]
     outputBinding:
-      glob: "Ct_mod/Ct_mod*"
+      glob: [Ct_mod*.nii*, Ct_mod*.img]
   Ct_sig:
-    type: File[]?
+    type: File?
+    secondaryFiles: [^^.json, ^.hdr, ^.xtr]
     outputBinding:
-      glob: "Ct_sig/Ct_sig*"
+      glob: [Ct_sig*.nii*, Ct_sig*.img]
   params:
     type: File[]
+    secondaryFiles: [^^.json, ^.hdr, ^.xtr]
     outputBinding:
-      glob: "*.nii.gz"
+      glob: ["*.nii.*", "*.img"]
   logs:
     type: File[]
     outputBinding:
