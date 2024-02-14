@@ -1,0 +1,78 @@
+OE_T1_method: IR_E
+OE_T1_vols:
+  - class: File
+    path: data/IR/OE_400.nii.gz
+  - class: File
+    path: data/IR/OE_800.nii.gz
+  - class: File
+    path: data/IR/OE_1000.nii.gz
+  - class: File
+    path: data/IR/OE_1500.nii.gz
+  - class: File
+    path: data/IR/OE_2000.nii.gz
+  - class: File
+    path: data/IR/OE_2500.nii.gz
+
+DCE_T1_method: VFA
+DCE_T1_vols:
+  - class: File
+    path: data/VFA/VFA_2_echo1.nii.gz
+  - class: File
+    path: data/VFA/VFA_5_echo1.nii.gz
+  - class: File
+    path: data/VFA/VFA_15_echo1.nii.gz
+  - class: File
+    path: data/VFA/VFA_30_echo1.nii.gz
+
+T1_noise: 0.1
+TR: 0.1
+
+oe_path:
+    class: File
+    path: data/oe/oe_dyn.nii.gz
+oe_limits: [2, 8, 10, 16]
+
+dce_path:
+    class: File
+    path: data/dce/dce_dyn_echo1.nii.gz
+dce_limits: [2, 9, 11, 15]
+relax_coeff: 0
+
+average_fun: median
+alternative: less
+equal_var: true
+
+dyn_dir:
+  class: Directory
+  location: data/dce
+dyn: dce_dyn_echo1.nii.gz
+Ct: false
+M0_ratio: true
+
+model: ETM
+dose: 0.05
+hct: 0.42
+iauc: [60,90,120]
+inj: 7
+last: 0
+max_iter: 0
+opt_type: LLS
+repeat_param: 4
+repeat_values: [0, 0.1, 0.2, 0.3, 0.4, 0.5]
+r1: 3.4
+test_enh: true
+
+Ct_mod: false
+Ct_sig: false
+iauc_peak: false
+
+nifti_scaling: false
+quiet: false
+use_BIDS: true
+voxel_size_warn_only: false
+no_log: false
+no_audit: true
+
+# roi:
+#     class: File
+#     path: data/roi.nii.gz
