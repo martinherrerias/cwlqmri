@@ -14,6 +14,20 @@
     #   (!) the rest seem not to be in edam
 
 - type: enum
+  name: hypothesis_test
+  label: Hypothesis t-test {'two-sided', 'less', 'greater'}
+  doc: |
+    'less' (default) = baseline lower than enhancing.
+    'two-sided' = baseline different to enhancing.
+    'greater' = baseline higher than enhancing.
+  symbols: [two-sided, less, greater]
+
+- type: enum
+  name: average_method
+  label: Method used for temporal average {median, mean}
+  symbols: [median, mean]
+
+- type: enum
   name: T1_method
   label: Method used for baseline T1 mapping
   doc: |

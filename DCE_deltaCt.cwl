@@ -32,14 +32,17 @@ hints:
     dockerPull: ghcr.io/uomresearchit/radnet/preclinicalmri/core_pipelines:latest
 
 requirements:
-  - class: InlineJavascriptRequirement
+  InlineJavascriptRequirement:
     expressionLib:
     - { $include: utils.js }
-  - class: ShellCommandRequirement
-  - class: InitialWorkDirRequirement
+  ShellCommandRequirement: {}
+  InitialWorkDirRequirement:
     listing: 
       - $(inputs.dce_path)
       - $(inputs.T1_path)
+  SchemaDefRequirement:
+    types:
+      - $import: custom_types.yml
 
 baseCommand: python
 arguments:
@@ -74,7 +77,9 @@ inputs:
     doc: |
       Relative path to the DCE data S(t), e.g. 'dce/dyn.nii.gz'
     type: File
-    secondaryFiles: ^^.json # see NOTES
+    secondaryFiles:
+      - pattern: ^^.json # see NOTES
+        required: true
     inputBinding:
       prefix: --dce_path
       valueFrom: $( nameroot2(self) )
@@ -107,26 +112,13 @@ inputs:
   average_fun:
     label: Method used for temporal average{median, mean}
     default: median
-    type: 
-      type: enum
-      symbols:
-        - median
-        - mean
+    type: custom_types.yml#average_method?
     inputBinding:
       prefix: --average_fun
   alternative:
     label: Hypothesis t-test {'two-sided', 'less', 'greater'}
-    doc: |
-      'less' (default) = baseline lower than enhancing.
-      'two-sided' = baseline different to enhancing.
-      'greater' = baseline higher than enhancing.
     default: less
-    type: 
-      type: enum
-      symbols:
-        - two-sided
-        - less
-        - greater
+    type: custom_types.yml#hypothesis_test?
     inputBinding:
       prefix: --alternative
   equal_var:
@@ -147,33 +139,27 @@ outputs:
   C_t:
     label: Concentration time series
     type: File
-    outputBinding:
-      glob: "C_t.*"
+    outputBinding: { glob: C_t.nii.gz }
   delta_C:
     label: Difference between enhancing and baseline periods
     type: File
-    outputBinding:
-      glob: "delta_C.*"
+    outputBinding: { glob: delta_C.nii.gz }
   C_baseline:
     label: Average concentration in baseline period
     type: File
-    outputBinding:
-      glob: "C_baseline.*"
+    outputBinding: { glob: C_baseline.nii.gz }
   C_enhancing:
     label: Average concentration in enhancing period
     type: File
-    outputBinding:
-      glob: "C_enhancing.*"
+    outputBinding: { glob: C_enhancing.nii.gz }
   C_p_vals:
     label: P-values comparing concentration in baseline vs enhancing periods
     type: File
-    outputBinding:
-      glob: "C_p_vals.*"
+    outputBinding: { glob: C_p_vals.nii.gz }
   S_p_vals:
     label: P-values comparing signal in baseline vs enhancing periods
     type: File
-    outputBinding:
-      glob: "S_p_vals.*"
+    outputBinding: { glob: S_p_vals.nii.gz }
   logs:
     type: File[]
     outputBinding:

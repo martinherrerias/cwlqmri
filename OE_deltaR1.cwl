@@ -32,15 +32,17 @@ hints:
     dockerPull: ghcr.io/uomresearchit/radnet/preclinicalmri/core_pipelines:latest
 
 requirements:
-  - class: InlineJavascriptRequirement
+  InlineJavascriptRequirement:
     expressionLib:
     - { $include: utils.js }
-  - class: ShellCommandRequirement
-  - class: InitialWorkDirRequirement
+  ShellCommandRequirement: {}
+  InitialWorkDirRequirement:
     listing: 
       - $(inputs.oe_path)
       - $(inputs.T1_path)
-
+  SchemaDefRequirement:
+    types:
+      - $import: custom_types.yml
 baseCommand: python
 arguments:
   - prefix: -m
@@ -74,7 +76,9 @@ inputs:
     doc: |
       Relative path to the OE data S(t), e.g. 'oe/oe_dyn.nii.gz'
     type: File
-    secondaryFiles: ^^.json # see NOTES
+    secondaryFiles:
+      - pattern: ^^.json # see NOTES
+        required: true
     inputBinding:
       prefix: --oe_path
       valueFrom: $( nameroot2(self) )
@@ -105,26 +109,13 @@ inputs:
   average_fun:
     label: Method used for temporal average{median, mean}
     default: median
-    type: 
-      type: enum
-      symbols:
-        - median
-        - mean
+    type: custom_types.yml#average_method?
     inputBinding:
       prefix: --average_fun
   alternative:
     label: Hypothesis t-test {'two-sided', 'less', 'greater'}
-    doc: |
-      'less' (default) = baseline lower than enhancing.
-      'two-sided' = baseline different to enhancing.
-      'greater' = baseline higher than enhancing.
     default: less
-    type: 
-      type: enum
-      symbols:
-        - two-sided
-        - less
-        - greater
+    type: custom_types.yml#hypothesis_test?
     inputBinding:
       prefix: --alternative
   equal_var:
@@ -145,33 +136,27 @@ outputs:
   R1_t:
     label: Relaxivity time series
     type: File
-    outputBinding:
-      glob: "R1_t.*"
+    outputBinding: { glob: R1_t.nii.gz }
   delta_R1:
     label: Difference between enhancing and baseline periods
     type: File
-    outputBinding:
-      glob: "delta_R1.*"
+    outputBinding: { glob: delta_R1.nii.gz }
   R1_baseline:
     label: Average R1 in baseline period
     type: File
-    outputBinding:
-      glob: "R1_baseline.*"
+    outputBinding: { glob: R1_baseline.nii.gz }
   R1_enhancing:
     label: Average R1 in enhancing period
     type: File
-    outputBinding:
-      glob: "R1_enhancing.*"
+    outputBinding: { glob: R1_enhancing.nii.gz }
   R1_p_vals:
     label: P-values comparing R1 in baseline vs enhancing periods
     type: File
-    outputBinding:
-      glob: "R1_p_vals.*"
+    outputBinding: { glob: R1_p_vals.nii.gz }
   S_p_vals:
     label: P-values comparing signal in baseline vs enhancing periods
     type: File
-    outputBinding:
-      glob: "S_p_vals.*"
+    outputBinding: { glob: S_p_vals.nii.gz }
   logs:
     type: File[]
     outputBinding:
