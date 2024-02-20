@@ -15,7 +15,7 @@ requirements:
   MultipleInputFeatureRequirement: {}
   SchemaDefRequirement:
     types:
-      - $import: custom_types.yml
+      - $import: utils:custom_types.yml
 
 inputs:
 # T1 mapping inputs
@@ -26,7 +26,7 @@ inputs:
         required: true
   T1_method:
     default: IR_E
-    type: custom_types.yml#T1_method
+    type: utils:custom_types.yml#T1_method
   T1_noise:
     type: double
     default: 0.1
@@ -52,10 +52,10 @@ inputs:
   oe_limits: int[]
   average_fun:
     default: median
-    type: custom_types.yml#average_method?
+    type: utils:custom_types.yml#average_method?
   alternative:
     default: less
-    type: custom_types.yml#hypothesis_test?
+    type: utils:custom_types.yml#hypothesis_test?
   equal_var:
     default: false
     type: boolean?
@@ -104,7 +104,7 @@ outputs:
 
 steps:
   IR:
-    run: madym_T1.cwl
+    run: tools:madym_T1.cwl
     in:
       T1_vols: T1_vols
       T1_method: T1_method
@@ -126,7 +126,7 @@ steps:
     out: [efficiency, T1, M0, error_tracker, logs]
 
   deltaR1:
-    run: OE_deltaR1.cwl
+    run: tools:OE_deltaR1.cwl
     in:
       T1_path: IR/T1
       efficiency_path: IR/efficiency
@@ -139,3 +139,6 @@ steps:
       no_log: no_log
     out: [R1_t, delta_R1, R1_baseline, R1_enhancing, R1_p_vals, S_p_vals, logs]
 
+$namespaces:
+  tools: ../tools/
+  utils: ../utils/

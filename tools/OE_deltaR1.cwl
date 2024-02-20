@@ -34,7 +34,7 @@ hints:
 requirements:
   InlineJavascriptRequirement:
     expressionLib:
-    - { $include: utils.js }
+    - { $include: utils:utils.js }
   ShellCommandRequirement: {}
   InitialWorkDirRequirement:
     listing: 
@@ -42,7 +42,7 @@ requirements:
       - $(inputs.T1_path)
   SchemaDefRequirement:
     types:
-      - $import: custom_types.yml
+      - $import: utils:custom_types.yml
 baseCommand: python
 arguments:
   - prefix: -m
@@ -109,13 +109,13 @@ inputs:
   average_fun:
     label: Method used for temporal average{median, mean}
     default: median
-    type: custom_types.yml#average_method?
+    type: utils:custom_types.yml#average_method?
     inputBinding:
       prefix: --average_fun
   alternative:
     label: Hypothesis t-test {'two-sided', 'less', 'greater'}
     default: less
-    type: custom_types.yml#hypothesis_test?
+    type: utils:custom_types.yml#hypothesis_test?
     inputBinding:
       prefix: --alternative
   equal_var:
@@ -170,6 +170,7 @@ outputs:
           return self;
         }
 
-# $namespaces:
+$namespaces:
+  utils: ../utils/
 #   edam: http://edamontology.org/
 #   iana: https://www.iana.org/assignments/media-types/

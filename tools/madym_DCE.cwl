@@ -45,7 +45,7 @@ requirements:
   # ShellCommandRequirement: {}
   SchemaDefRequirement:
     types:
-      - $import: custom_types.yml
+      - $import: utils:custom_types.yml
 
 baseCommand: madym_DCE
 arguments:
@@ -163,7 +163,7 @@ inputs:
   T1_method:
     label: Method used for baseline T1 mapping
     default: VFA
-    type: custom_types.yml#T1_method?
+    type: utils:custom_types.yml#T1_method?
     inputBinding:
       prefix: --T1_method
   T1_vols:
@@ -271,7 +271,7 @@ inputs:
   # Tracer-kinetic model fitting
   model:
     label: Tracer-kinetic model to fit
-    type: custom_types.yml#tracer_kinetic_model
+    type: utils:custom_types.yml#tracer_kinetic_model
     inputBinding:
       prefix: -m
   first:
@@ -319,7 +319,7 @@ inputs:
       prefix: --max_iter
   opt_type:
     label: Type of optimisation to use
-    type: custom_types.yml#optim_method?
+    type: utils:custom_types.yml#optim_method?
     default: BLEIC
     inputBinding:
       prefix: --opt_type
@@ -440,13 +440,13 @@ inputs:
       NIFTI_GZ / NIFTI will read all compressed and uncompressed NIFTI, and ANALYZE images 
       However, `img_fmt_r` gets mapped as the default for `img_fmt_w` where the choice does matter.
     default: NIFTI_GZ
-    type: custom_types.yml#image_format?
+    type: utils:custom_types.yml#image_format?
     inputBinding:
       prefix: --img_fmt_r
   img_fmt_w:
     label: Image format for writing output
     type:
-      - custom_types.yml#image_format
+      - utils:custom_types.yml#image_format
       - type: enum
         symbols: [ "same_as_input" ]
     default: "same_as_input"
@@ -547,6 +547,7 @@ outputs:
           return self;
         }
 
-# $namespaces:
+$namespaces:
+  utils: ../utils/
 #   edam: http://edamontology.org/
 #   iana: https://www.iana.org/assignments/media-types/

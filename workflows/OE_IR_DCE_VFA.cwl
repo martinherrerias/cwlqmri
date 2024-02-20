@@ -11,7 +11,7 @@ requirements:
   MultipleInputFeatureRequirement: {}
   SchemaDefRequirement:
     types:
-      - $import: custom_types.yml
+      - $import: utils:custom_types.yml
 
 inputs:
 # T1 mapping inputs
@@ -22,7 +22,7 @@ inputs:
         required: true
   OE_T1_method:
     default: IR_E
-    type: custom_types.yml#T1_method
+    type: utils:custom_types.yml#T1_method
 
 # T1 mapping inputs
   DCE_T1_vols:
@@ -32,7 +32,7 @@ inputs:
         required: true
   DCE_T1_method:
     default: VFA
-    type: custom_types.yml#T1_method
+    type: utils:custom_types.yml#T1_method
 
 # Are these common to both chains?
   T1_noise:
@@ -64,10 +64,10 @@ inputs:
 # Are these common to both chains?
   average_fun:
     default: median
-    type: custom_types.yml#average_method?
+    type: utils:custom_types.yml#average_method?
   alternative:
     default: less
-    type: custom_types.yml#hypothesis_test?
+    type: utils:custom_types.yml#hypothesis_test?
   equal_var:
     default: false
     type: boolean?
@@ -91,14 +91,14 @@ inputs:
   # Tracer-kinetic model fitting
   model: 
     default: ETM
-    type: custom_types.yml#tracer_kinetic_model
+    type: utils:custom_types.yml#tracer_kinetic_model
   first: int?
   last: int?
   no_opt: boolean?
   dyn_noise: boolean?
   test_enh: boolean?
   max_iter: int?
-  opt_type: custom_types.yml#optim_method?
+  opt_type: utils:custom_types.yml#optim_method?
   
   # Initializing/fixing tracer-kinetic model parameters
   init_params: double[]?
@@ -230,3 +230,6 @@ steps:
 
     out: [T1, M0, C_t, delta_C, C_baseline, C_enhancing, C_p_vals, S_p_vals, 
           IAUC, Ktrans, enhVox, error_tracker, residuals, stats, Ct_mod, Ct_sig, params, logs]
+
+$namespaces:
+  utils: ../utils/

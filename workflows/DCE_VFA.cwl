@@ -16,7 +16,7 @@ requirements:
   MultipleInputFeatureRequirement: {}
   SchemaDefRequirement:
     types:
-      - $import: custom_types.yml
+      - $import: utils:custom_types.yml
 
 inputs:
 # T1 mapping inputs
@@ -27,7 +27,7 @@ inputs:
         required: true
   T1_method:
     default: VFA
-    type: custom_types.yml#T1_method
+    type: utils:custom_types.yml#T1_method
   T1_noise:
     type: double
     default: 0.1
@@ -47,10 +47,10 @@ inputs:
   relax_coeff: double
   average_fun:
     default: median
-    type: custom_types.yml#average_method?
+    type: utils:custom_types.yml#average_method?
   alternative:
     default: less
-    type: custom_types.yml#hypothesis_test?
+    type: utils:custom_types.yml#hypothesis_test?
   equal_var:
     default: false
     type: boolean?
@@ -74,14 +74,14 @@ inputs:
   # Tracer-kinetic model fitting
   model: 
     default: ETM
-    type: custom_types.yml#tracer_kinetic_model
+    type: utils:custom_types.yml#tracer_kinetic_model
   first: int?
   last: int?
   no_opt: boolean?
   dyn_noise: boolean?
   test_enh: boolean?
   max_iter: int?
-  opt_type: custom_types.yml#optim_method?
+  opt_type: utils:custom_types.yml#optim_method?
   
   # Initializing/fixing tracer-kinetic model parameters
   init_params: double[]?
@@ -176,7 +176,7 @@ outputs:
 
 steps:
   VFA:
-    run: madym_T1.cwl
+    run: tools:madym_T1.cwl
     in:
       T1_vols: T1_vols
       T1_method: T1_method
@@ -198,7 +198,7 @@ steps:
     out: [efficiency, T1, M0, error_tracker, logs]
 
   deltaCt:
-    run: DCE_deltaCt.cwl
+    run: tools:DCE_deltaCt.cwl
     in:
       T1_path: VFA/T1
       roi_path: roi
@@ -212,7 +212,7 @@ steps:
     out: [C_t, delta_C, C_baseline, C_enhancing, C_p_vals, S_p_vals, logs]
 
   ETM:
-    run: madym_DCE.cwl
+    run: tools:madym_DCE.cwl
     in:
     # Input maps
       err: VFA/error_tracker
@@ -268,3 +268,7 @@ steps:
       quiet: quiet
       no_audit: no_audit
     out: [IAUC, Ktrans, enhVox, error_tracker, residuals, stats, Ct_mod, Ct_sig, params, logs]
+
+$namespaces:
+  tools: ../tools/
+  utils: ../utils/
