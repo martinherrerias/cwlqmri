@@ -1,18 +1,18 @@
 T1_vols:
   - class: File
-    path: data/VFA/VFA_2_echo1.nii.gz
+    path: ../data/VFA/VFA_2_echo1.nii.gz
   - class: File
-    path: data/VFA/VFA_5_echo1.nii.gz
+    path: ../data/VFA/VFA_5_echo1.nii.gz
   - class: File
-    path: data/VFA/VFA_15_echo1.nii.gz
+    path: ../data/VFA/VFA_15_echo1.nii.gz
   - class: File
-    path: data/VFA/VFA_30_echo1.nii.gz
+    path: ../data/VFA/VFA_30_echo1.nii.gz
 T1_noise: 0.1
 TR: 0.1
 
 dce_path:
     class: File
-    path: data/dce/dce_dyn_echo1.nii.gz
+    path: ../data/dce/dce_dyn_echo1.nii.gz
 dce_limits: [2, 9, 11, 15]
 relax_coeff: 0
 average_fun: median
@@ -21,7 +21,7 @@ equal_var: true
 
 dyn_dir:
   class: Directory
-  location: data/dce
+  location: ../data/dce
 dyn: dce_dyn_echo1.nii.gz
 Ct: false
 M0_ratio: true
@@ -52,4 +52,4 @@ no_audit: true
 
 # roi:
 #     class: File
-#     path: data/roi.nii.gz
+#     path: ../data/roi.nii.gz
