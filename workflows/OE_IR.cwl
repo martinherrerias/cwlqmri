@@ -1,6 +1,6 @@
 cwlVersion: v1.2
 class: Workflow
-label: OE-IR -- madym_T1 (IR) + OE_deltaR1
+label: OE-IR -- madym_T1 (IR_E) + OE_deltaR1
 doc: |
     Calculates T1 map using Inversion Recovery (with Efficiency weighting), 
     estimates R1(t) from OE signal S(t), and the IR [efficiency,] and T1 maps,
