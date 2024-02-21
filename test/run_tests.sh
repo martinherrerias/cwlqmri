@@ -1,34 +1,36 @@
 #! /bin/bash
 
-# Usage: run_tests.sh [-n] [-c] [-t TESTSEQ] [...]
-# Run tests for *.cwl Command Line Tools or Workflows, using:
-#
-#   cwltool [...] --outdir output/<type>/<key> --cachedir cache/<key> \
-#    ../*/<tool.cwl> ./*/<input.yml> > output/<tool.cwl>.log 2>&1
-#
-# Where ../*/<tool.cwl> and ./*/<input.yml> are set according to each <key>
-# in the TESTSEQ, which is a sequence of keys to be tested:
-#
-#     <key>  <tool.cwl>                <input.yml>
-#   ---------------------------------------------------------------------
-#   IRE|VFA  ../tools/madym_T1.cwl     ./tools/madym_T1_<key>_test.yml
-#       ETM  ../tools/madym_DCE.cwl    ./tools/madym_DCE_<key>_test.yml
-#   deltaCt  ../tools/DCE_deltaCt.cwl  ./tools/DCE_<key>_test.yml
-#   deltaR1  ../tools/OE_deltaR1.cwl   ./tools/OE_<key>_test.yml
-#     <key>  ../workflows/<key>.cwl    ./workflows/<key>_test.yml
-#
-# The following meta-keys are also supported:
-#
-#       tools - equivalent to IRE VFA ETM deltaCt deltaR1
-#   workflows - equivalent to OE_IR DCE_VFA OE_IR_DCE_VFA
-#         all - (default) tools followed by workflows
-#
-# Options:
-# -t A B ... : run tests for the given keys in that order. -t "all" (default)
-#           stands for the sequence: IRE VFA deltaCt deltaR1
-# -n: dry run (print commands only)
-# -c: clean up (remove output and cache directories)
-# ...: additional arguments to be passed to cwltool
+read -r -d '' HELPSTR << HELPSTR
+Usage: run_tests.sh [-n] [-c] [-t TESTSEQ] [...]
+Run tests for *.cwl Command Line Tools or Workflows, using:
+
+cwltool [...] --outdir output/<type>/<key> --cachedir cache/<key> \\
+  ../*/<tool.cwl> ./*/<input.yml> > output/<tool.cwl>.log 2>&1
+
+Where ../*/<tool.cwl> and ./*/<input.yml> are set according to each <key>
+in the TESTSEQ, which is a sequence of keys to be tested:
+
+    <key>  <tool.cwl>                <input.yml>
+  ---------------------------------------------------------------------
+  IRE|VFA  ../tools/madym_T1.cwl     ./tools/madym_T1_<key>_test.yml
+      ETM  ../tools/madym_DCE.cwl    ./tools/madym_DCE_<key>_test.yml
+  deltaCt  ../tools/DCE_deltaCt.cwl  ./tools/DCE_<key>_test.yml
+  deltaR1  ../tools/OE_deltaR1.cwl   ./tools/OE_<key>_test.yml
+    <key>  ../workflows/<key>.cwl    ./workflows/<key>_test.yml
+
+The following meta-keys are also supported:
+
+      tools - equivalent to IRE VFA ETM deltaCt deltaR1
+  workflows - equivalent to OE_IR DCE_VFA OE_IR_DCE_VFA
+        all - (default) tools followed by workflows
+
+Options:
+-t A B ... : run tests for the given keys in that order. -t "all" (default)
+          stands for the sequence: IRE VFA deltaCt deltaR1
+-n: dry run (print commands only)
+-c: clean up (remove output and cache directories)
+...: additional arguments to be passed to cwltool
+HELPSTR
 
 TOOLS=(IRE VFA ETM deltaCt deltaR1)
 WORKFLOWS=(OE_IR DCE_VFA OE_IR_DCE_VFA)
@@ -61,6 +63,7 @@ dry_run=false
 cleanup=false
 while [[ $# -gt 0 ]]; do
   case "$1" in
+    -h|--help) echo "$HELPSTR"; exit 0;;
     -n) dry_run=true;;
     -c) cleanup=true;;
     -t)
