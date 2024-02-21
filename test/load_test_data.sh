@@ -12,8 +12,12 @@ if [ ! -d "$DATA" ]; then
     echo "Invalid DATA directory: $DATA"
     exit 1
 fi
+shift
 
-REQ=${2:-"dce oe IR VFA"}
+REQ=($@)
+[ ${#REQ[@]} -eq 0 ] && REQ=(dce oe IR VFA)
+
+echo "Staging: (${REQ[@]}) from ${DATA}"
 
 for r in ${REQ[@]}; do
     if [ ! -d "$DATA/$r" ]; then
