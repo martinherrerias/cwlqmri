@@ -1,0 +1,16 @@
+
+- id: touch
+  tool: ../utils/touch.cwl
+  job: utils/foobar.json
+  tags: [ utils ]
+  output:
+    files: [{ "class": "File", "location": "foo" },
+            { "class": "File", "location": "bar"}]
+
+- id: rename
+  tool: utils/rename_wf.cwl
+  job: utils/rename_wf_test.json
+  tags: [ utils ]
+  output:
+    renamed: [{ "class": "File", "location": "the_foo.log"},
+              { "class": "File", "location": "bar.csv"}]
