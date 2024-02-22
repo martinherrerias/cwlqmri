@@ -1,6 +1,6 @@
 cwlVersion: v1.2
 class: CommandLineTool
-label: madym_T1 tool wrapper
+label: madym_DCE tool wrapper
 doc: |
     Madym is a C++ toolkit for quantative DCE-MRI and DWI-MRI analysis developed 
     in the QBI Lab at the University of Manchester.
@@ -16,7 +16,7 @@ doc: |
       - https://gitlab.com/manchester_qbi/manchester_qbi_public/madym_cxx/-/wikis/madym_DCE
 
     NOTES:
-      - The following override the madym_T1 defaults:
+      - The following override the madym_DCE defaults:
         - `nifti_4D` defaults to TRUE for NIFTI and NIFTI_GZ `img_fmt_r`
         - `nifti_scaling` defaults to TRUE
         - `use_BIDS` defaults to TRUE
@@ -27,17 +27,17 @@ doc: |
         directory, and writing all outputs to the output directory. The actual
         system paths can be set by the runner, e.g.:
           `cwltool --basedir <base/dir> --outdir <root/out> ...`
-      - Logs are time-stamped and suffixed by madym: `madym_T1_{date}_{time}_{log.ext}`
+      - Logs are time-stamped and suffixed by madym: `madym_DCE_{date}_{time}_{log.ext}`
         where `{log.ext}` is the value of the `--program_log`, `--config_out`, and
         `--autit` options, respectively. This wrapper renames them to a consistent
-        `madym_T1_{method}.{ext}`, with extensions `.log`, `.cfg`, and `.audit`.
+        `madym_DCE.{ext}`, with extensions `.log`, `.cfg`, and `.audit`.
 
 hints:
   DockerRequirement:
     dockerPull: ghcr.io/uomresearchit/radnet/preclinicalmri/core_pipelines:latest
   SoftwareRequirement:
     packages:
-      - package: madym_T1
+      - package: madym_DCE
         version: [ "v4.23.0" ]
 
 requirements:
@@ -523,12 +523,12 @@ outputs:
     type: File?
     secondaryFiles: [^^.json, ^.hdr, ^.xtr]
     outputBinding:
-      glob: [Ct_mod*.nii*, Ct_mod*.img]
+      glob: [Ct_mod/Ct_mod*.nii*, Ct_mod/Ct_mod*.img]
   Ct_sig:
     type: File?
     secondaryFiles: [^^.json, ^.hdr, ^.xtr]
     outputBinding:
-      glob: [Ct_sig*.nii*, Ct_sig*.img]
+      glob: [Ct_sig/Ct_sig*.nii*, Ct_sig/Ct_sig*.img]
   params:
     type: File[]
     secondaryFiles: [^^.json, ^.hdr, ^.xtr]
@@ -538,10 +538,10 @@ outputs:
     type: File[]
     outputBinding:
       glob: "madym_DCE_*_cwl.*"
-      outputEval: | # Remove timestamps: *_{date}_{time}_cwl.{ext} -> *_{method}.{ext}
+      outputEval: | # Remove timestamps: *_{date}_{time}(_*)_cwl.{ext} -> *(_*).{ext}
         ${
           self.forEach(function(f) {
-            f.basename = f.basename.replace(/\d{8}_\d{6}/, inputs.model).replace(/_cwl/, "");
+            f.basename = f.basename.replace(/_\d{8}_\d{6}/, "").replace(/_cwl/, "");
             return f;
           });
           return self;

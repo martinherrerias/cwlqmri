@@ -30,7 +30,7 @@ doc: |
       - Logs are time-stamped and suffixed by madym: `madym_T1_{date}_{time}_{log.ext}`
         where `{log.ext}` is the value of the `--program_log`, `--config_out`, and
         `--autit` options, respectively. This wrapper renames them to a consistent
-        `madym_T1_{method}.{ext}`, with extensions `.log`, `.cfg`, and `.audit`.
+        `madym_T1.{ext}`, with extensions `.log`, `.cfg`, and `.audit`.
 
 hints:
   DockerRequirement:
@@ -218,10 +218,10 @@ outputs:
     type: File[]
     outputBinding:
       glob: madym_T1_*_cwl.*
-      outputEval: | # Remove timestamps: madym_T1_{date}_{time}_cwl.{ext} -> madym_T1_{method}.{ext}
+      outputEval: | # Remove timestamps: *_{date}_{time}(_*)_cwl.{ext} -> *(_*).{ext}
         ${
           self.forEach(function(f) {
-            f.basename = f.basename.replace(/\d{8}_\d{6}/, inputs.T1_method).replace(/_cwl/, "");
+            f.basename = f.basename.replace(/_\d{8}_\d{6}/, "").replace(/_cwl/, "");
             return f;
           });
           return self;
