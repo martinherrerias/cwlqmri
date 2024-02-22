@@ -28,7 +28,7 @@ Options:
 -t A B ... : run tests for the given keys in that order. -t "all" (default)
           stands for the sequence: IRE VFA deltaCt deltaR1
 -n: dry run (print commands only)
--c: clean up (remove output and cache directories)
+-c: clean up (remove output and cache directories for selected keys)
 ...: additional arguments to be passed to cwltool
 HELPSTR
 
@@ -79,11 +79,6 @@ done
 
 cd "$( dirname "${BASH_SOURCE[0]}" )"
 
-if [ $cleanup == true ]; then
-  rm -rf output/* cache/*
-  [ -z "${TESTSEQ[@]}" ] && exit 0
-fi
-
 # Handle special keys
 [ -z "${TESTSEQ[@]}" ] && TESTSEQ=("all")
 if [ ${#TESTSEQ[@]} -eq 1 ]; then
@@ -117,6 +112,11 @@ for key in ${TESTSEQ[@]}; do
   out="output/${type}/${key}"
   cache="cache/${key}"
   log="output/${tool##*/}.log"
+
+  if [ $cleanup == true ]; then
+    rm -rf "${out}/"* "${cache}/"*
+    [ -z "${TESTSEQ[@]}" ] && exit 0
+  fi
 
   cmd="cwltool ${ARGS[@]} --outdir ${out} --cachedir ${cache} \
     ${tool} ${input} > ${log} 2>&1"
