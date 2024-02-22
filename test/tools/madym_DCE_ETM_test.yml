@@ -29,6 +29,6 @@ test_enh: true
 
 use_BIDS: true
 no_audit: true
-Ct_mod: false
-Ct_sig: false
+Ct_mod: true
+Ct_sig: true
 iauc_peak: false

@@ -16,4 +16,4 @@ oe_limits: [2, 8, 10, 16]
 average_fun: median
 alternative: less
 equal_var: true
-no_log: false
+no_audit: true

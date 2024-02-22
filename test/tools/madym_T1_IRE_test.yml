@@ -3,6 +3,10 @@
 #   cwltool [--outdir OUT --verbose --cachedir TMP] madym_T1.cwl DATA/madym_T1_test.yml
 
 T1_method: IR_E
+T1_noise: 0.1
+TR: 1e5
+use_BIDS: false
+nifti_4D: false
 no_audit: true
 T1_vols:
   - class: File
