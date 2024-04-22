@@ -101,3 +101,71 @@
     S_p_vals: { class: File, location: "S_p_vals.nii.gz" }
     logs: [{ class: File, location: "OE_deltaR1.cfg" },
            { class: File, location: "OE_deltaR1.log" }]
+
+- id: OE_IR
+  doc: madym_T1_IRE + OE_deltaR1
+  tool: ../workflows/OE_IR.cwl
+  job: workflows/OE_IR_test.json
+  tags: [ workflows, subworkflows, OE ]
+  output:
+    efficiency: { class: File, location: "efficiency.nii.gz" }
+    T1: { class: File, location: "T1.nii.gz" }
+    M0: { class: File, location: "M0.nii.gz" }
+    error_tracker: { class: File, location: "error_tracker.nii.gz" }
+    R1_t: { class: File, location: "R1_t.nii.gz" }
+    delta_R1: { class: File, location: "delta_R1.nii.gz" }
+    R1_baseline: { class: File, location: "R1_baseline.nii.gz" }
+    R1_enhancing: { class: File, location: "R1_enhancing.nii.gz" }
+    R1_p_vals: { class: File, location: "R1_p_vals.nii.gz" }
+    S_p_vals: { class: File, location: "S_p_vals.nii.gz" }
+    logs: [{ class: File, location: "madym_T1.cfg" },
+           { class: File, location: "madym_T1.log" },           
+           { class: File, location: "madym_T1_override.cfg" },
+           { class: File, location: "OE_deltaR1.cfg" },
+           { class: File, location: "OE_deltaR1.log" }]
+
+- id: DCE_VFA
+  doc: madym_T1_VFA + DCE_deltaCt + madym_DCE_ETM
+  tool: ../workflows/DCE_VFA.cwl
+  job: workflows/DCE_VFA_test.json
+  tags: [ workflows, subworkflows, DCE ]
+  output:
+    efficiency: null
+    T1: { class: File, location: "T1.nii.gz" }
+    M0: { class: File, location: "M0.nii.gz" }
+    error_tracker: { class: File, location: "error_tracker.nii.gz" }
+    C_t: { class: File, location: "C_t.nii.gz" }
+    delta_C: { class: File, location: "delta_C.nii.gz" }
+    C_baseline: { class: File, location: "C_baseline.nii.gz" }
+    C_enhancing: { class: File, location: "C_enhancing.nii.gz" }
+    C_p_vals: { class: File, location: "C_p_vals.nii.gz" }
+    S_p_vals: { class: File, location: "S_p_vals.nii.gz" }
+    IAUC: [{ class: File, location: "IAUC60.nii.gz" },
+           { class: File, location: "IAUC90.nii.gz" },
+           { class: File, location: "IAUC120.nii.gz" }]
+    Ktrans: { class: File, location: "Ktrans.nii.gz" }
+    enhVox: { class: File, location: "enhVox.nii.gz" }
+    residuals: { class: File, location: "residuals.nii.gz" }
+    stats: [{ class: File, location: "AIF.txt" },
+            { class: File, location: "ROI_summary.txt" },
+            { class: File, location: "enhVox_summary.txt" },
+            { class: File, location: "ROI_summary_stats.csv" },
+            { class: File, location: "enhVox_summary_stats.csv" }]
+    params: [{ class: File, location: "tau_a.nii.gz" },
+             { class: File, location: "v_e.nii.gz" },
+             { class: File, location: "v_p.nii.gz" }]
+    logs: [{ class: File, location: "madym_T1.cfg" },
+           { class: File, location: "madym_T1.log" },           
+           { class: File, location: "madym_T1_override.cfg" },
+           { class: File, location: "DCE_deltaCt.cfg" },
+           { class: File, location: "DCE_deltaCt.log" },
+           { class: File, location: "madym_DCE.cfg" },
+           { class: File, location: "madym_DCE.log" },           
+           { class: File, location: "madym_DCE_override.cfg" }]
+
+# - id: OE_IR_DCE_VFA
+#   doc: OE_IR + DCE_VFA
+#   tool: ../workflows/OE_IR_DCE_VFA.cwl
+#   job: workflows/OE_IR_DCE_VFA_test.json
+#   tags: [ workflows]
+#   output:
