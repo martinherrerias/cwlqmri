@@ -495,6 +495,14 @@ outputs:
     secondaryFiles: [^^.json, ^.hdr, ^.xtr]
     outputBinding:
       glob: [IAUC*.nii*, IAUC*.img]
+      outputEval: |
+        ${
+          // Sort by time, e.g. IAUC_90 before IAUC_120
+          self.sort(function(a, b) {
+            return a.basename.localeCompare(b.basename, undefined, {numeric: true});
+          });
+          return self;
+        }
   Ktrans:
     type: File
     secondaryFiles: [^^.json, ^.hdr, ^.xtr]
@@ -534,6 +542,18 @@ outputs:
     secondaryFiles: [^^.json, ^.hdr, ^.xtr]
     outputBinding:
       glob: ["*.nii.*", "*.img"]
+      outputEval: |
+        ${
+          // Remove maps included in other outputs
+          self = self.filter(function(f) {
+            return !f.basename.startsWith("IAUC") && 
+                   !f.basename.startsWith("Ktrans") &&
+                   !f.basename.startsWith("enhVox") && 
+                   !f.basename.startsWith("error_tracker") &&
+                   !f.basename.startsWith("residuals");
+          });
+          return self;
+        }
   logs:
     type: File[]
     outputBinding:
