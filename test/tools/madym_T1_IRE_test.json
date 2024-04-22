@@ -1,0 +1,40 @@
+{
+    "T1_method": "IR_E",
+    "T1_noise": 0.1,
+    "TR": 1e5,
+    "use_BIDS": false,
+    "nifti_4D": false,
+    "no_audit": true,
+    "T1_vols": [
+        {
+            "class": "File",
+            "format": "NIFTI_GZ",
+            "path": "../data/IR/OE_400.nii.gz"
+        },
+        {
+            "class": "File",
+            "format": "NIFTI_GZ",
+            "path": "../data/IR/OE_800.nii.gz"
+        },
+        {
+            "class": "File",
+            "format": "NIFTI_GZ",
+            "path": "../data/IR/OE_1000.nii.gz"
+        },
+        {
+            "class": "File",
+            "format": "NIFTI_GZ",
+            "path": "../data/IR/OE_1500.nii.gz"
+        },
+        {
+            "class": "File",
+            "format": "NIFTI_GZ",
+            "path": "../data/IR/OE_2000.nii.gz"
+        },
+        {
+            "class": "File",
+            "format": "NIFTI_GZ",
+            "path": "../data/IR/OE_2500.nii.gz"
+        }
+    ]
+}

@@ -1,0 +1,16 @@
+{
+    "dce_path": {
+        "class": "File",
+        "path": "../data/dce/dce_dyn_echo1.nii.gz"
+    },
+    "T1_path": {
+        "class": "File",
+        "path": "../output/tools/VFA/T1.nii.gz"
+    },
+    "dce_limits": [2, 9, 11, 15],
+    "relax_coeff": 3.4,
+    "average_fun": "median",
+    "alternative": "less",
+    "equal_var": true,
+    "no_audit": true
+}
