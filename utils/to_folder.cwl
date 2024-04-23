@@ -1,29 +1,17 @@
 #!/usr/bin/env cwl-runner
 
-# SOURCE: https://github.com/rawgene/cwl/blob/master/tools/folder.cwl
+# SOURCE: https://github.com/rawgene/cwl/blob/master/tools/name.cwl
 # Copyright (C) 2019 Alessandro Pio Greco, Patrick Hedley-Miller, Filipe Jesus, Zeyu Yang
-# 
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-# 
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-# 
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+# GNU General Public License <https://www.gnu.org/licenses/>
 
 cwlVersion: v1.0
 class: ExpressionTool
-label: return directory with items 
+label: return directory with content items 
 requirements:
   InlineJavascriptRequirement: {}
 
 inputs:
-  item: 
+  content: 
     type:
       - File
       - Directory
@@ -34,27 +22,27 @@ inputs:
   name: string
 
 outputs:
-    out: Directory
+    folder: Directory
 
 expression: |
   ${
-    if (inputs.item.class == 'Directory'){
+    if (inputs.content.class == 'Directory'){
         return {
-            'out': {
+            'folder': {
                 'class': 'Directory',
                 'basename': inputs.name,
-                'listing': [inputs.item]
+                'listing': [inputs.content]
             }
         }
     };
-    if (inputs.item.class == 'File'){
-        var arr = [inputs.item];
+    if (inputs.content.class == 'File'){
+        var arr = [inputs.content];
         }
     else {
-        var arr = inputs.item;
+        var arr = inputs.content;
     }
     return {
-        'out': {
+        'folder': {
             'class': 'Directory',
             'basename': inputs.name,
             'listing': arr
