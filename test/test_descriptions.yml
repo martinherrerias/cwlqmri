@@ -2,7 +2,7 @@
 - id: touch
   doc: Create two files (mainly to test the tester)
   tool: ../utils/touch.cwl
-  job: utils/foobar.json
+  job: utils/touch_test.json
   tags: [ utils ]
   output:
     files: [{ class: File, location: "foo" },
@@ -10,12 +10,35 @@
 
 - id: rename
   doc: Rename files using regexp pattern / replace
-  tool: utils/rename_wf.cwl
-  job: utils/rename_wf_test.json
+  tool: utils/rename_test.cwl
   tags: [ utils ]
   output:
     renamed: [{ class: File, location: "the_foo.log"},
               { class: File, location: "bar.csv"}]
+
+- id: to_folder
+  doc: Place files in (nested) folder
+  tool: utils/to_folder_test.cwl
+  tags: [ utils ]
+  output:
+    folder: {
+        class: "Directory",
+        basename: "bam/baz",
+        listing: [
+            { class: "File", basename: "foo" },
+            { class: "File", basename: "bar" }
+        ],
+    }
+
+- id: from_folder
+  doc: Retrieve files from a (nested) folder
+  tool: utils/from_folder_test.cwl
+  tags: [ utils ]
+  output:
+    files: [{ class: File, basename: "foo" },
+            { class: File, basename: "bar"},
+            { class: File, basename: "baz"},
+            { class: File, basename: "qux"}]
 
 - id: madym_T1_IRE
   doc: Fit T1 map using Inversion Recovery (with efficiency map)

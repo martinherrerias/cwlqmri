@@ -1,5 +1,0 @@
-{
-    "names": ["foo.txt", "bar.csv"],
-    "pattern": "(.*)\\.txt$",
-    "replace": "the_$1.log"
-}

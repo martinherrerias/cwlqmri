@@ -1,14 +1,21 @@
 #!/usr/bin/env cwl-runner
 class: Workflow
 cwlVersion: v1.2
+label: Test workflow for utils/rename.cwl
 
 requirements:
   - class: InlineJavascriptRequirement
 
 inputs:
-  names: string[]
-  pattern: string
-  replace: string
+  names: 
+    type: string[]
+    default: ["foo.txt", "bar.csv"]
+  pattern: 
+    type: string
+    default: "(.*)\\.txt$"
+  replace: 
+    type: string
+    default: "the_$1.log"
 
 outputs:
   renamed:
