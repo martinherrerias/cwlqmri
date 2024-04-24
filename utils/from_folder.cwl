@@ -1,35 +1,10 @@
 cwlVersion: v1.2
-class: CommandLineTool
+class: ExpressionTool
 label: Return an array from a base directory and relative paths 
 
 requirements:
-  - class: InlineJavascriptRequirement
-    expressionLib:  
-      - |
-        function contentfilter(relpaths, basedir) {
-          var arr = [];
-          for (var i = 0; i < relpaths.length; i++) {
-
-            var parts = relpaths[i].split("/");
-
-            var item = basedir
-            for (var j = 0; j < parts.length; j++) {
-              item = item.listing.find(function(x) {
-                return x.basename === parts[j];
-              });
-              if (!item) {
-                throw "Item not found: " + relpaths[i];
-              }
-            }
-            arr.push(item);
-          }
-          return arr;
-        }
-  - class: InitialWorkDirRequirement
-    listing:
-      - entry: $(contentfilter(inputs.relpaths, inputs.basedir))
-
-baseCommand: echo
+  LoadListingRequirement: {loadListing: "deep_listing"}
+  InlineJavascriptRequirement: {}
 
 inputs:
   relpaths: string[]
@@ -42,5 +17,24 @@ outputs:
         items:
           - File
           - Directory
-    outputBinding:
-      outputEval: $(contentfilter(inputs.relpaths, inputs.basedir))
+
+expression: |
+  ${
+    var arr = [];
+    for (var i = 0; i < inputs.relpaths.length; i++) {
+
+      var parts = inputs.relpaths[i].split("/");
+
+      var item = inputs.basedir
+      for (var j = 0; j < parts.length; j++) {
+        item = item.listing.find(function(x) {
+          return x.basename === parts[j];
+        });
+        if (!item) {
+          throw "Item not found: " + inputs.relpaths[i];
+        }
+      }
+      arr.push(item);
+    }
+    return {"files": arr}; 
+  }
