@@ -43,7 +43,7 @@
 - id: madym_T1_IRE
   doc: Fit T1 map using Inversion Recovery (with efficiency map)
   tool: ../tools/madym_T1.cwl
-  job: tools/madym_T1_IRE_test.json
+  job: tools/madym_T1_IRE_test.yml
   tags: [ tools, madym, T1 ]
   output:
     efficiency: { class: File, location: "efficiency.nii.gz" }
@@ -57,7 +57,7 @@
 - id: madym_T1_VFA
   doc: Fit T1 map using Variable Flip Angle
   tool: ../tools/madym_T1.cwl
-  job: tools/madym_T1_VFA_test.json
+  job: tools/madym_T1_VFA_test.yml
   tags: [ tools, madym, T1 ]
   output:
     efficiency: null
@@ -71,7 +71,7 @@
 - id: madym_DCE_ETM
   doc: Fit DCE model
   tool: ../tools/madym_DCE.cwl
-  job: tools/madym_DCE_ETM_test.json
+  job: tools/madym_DCE_ETM_test.yml
   tags: [ tools, madym, DCE ]
   output:
     IAUC: [{ class: File, location: "IAUC60.nii.gz" },
@@ -98,7 +98,7 @@
 - id: deltaCt
   doc: Estimate C(t) and compare baseline and enhancing periods
   tool: ../tools/DCE_deltaCt.cwl
-  job: tools/DCE_deltaCt_test.json
+  job: tools/DCE_deltaCt_test.yml
   tags: [ tools, deltas ]
   output:
     C_t: { class: File, location: "C_t.nii.gz" }
@@ -113,7 +113,7 @@
 - id: deltaR1
   doc: Estimate R1(t) and compare baseline and enhancing periods
   tool: ../tools/OE_deltaR1.cwl
-  job: tools/OE_deltaR1_test.json
+  job: tools/OE_deltaR1_test.yml
   tags: [ tools, deltas ]
   output:
     R1_t: { class: File, location: "R1_t.nii.gz" }
@@ -128,7 +128,7 @@
 - id: OE_IR
   doc: madym_T1_IRE + OE_deltaR1
   tool: ../workflows/OE_IR.cwl
-  job: workflows/OE_IR_test.json
+  job: workflows/OE_IR_test.yml
   tags: [ workflows, subworkflows, OE ]
   output:
     efficiency: { class: File, location: "efficiency.nii.gz" }
@@ -150,7 +150,7 @@
 - id: DCE_VFA
   doc: madym_T1_VFA + DCE_deltaCt + madym_DCE_ETM
   tool: ../workflows/DCE_VFA.cwl
-  job: workflows/DCE_VFA_test.json
+  job: workflows/DCE_VFA_test.yml
   tags: [ workflows, subworkflows, DCE ]
   output:
     efficiency: null
@@ -189,6 +189,6 @@
 # - id: OE_IR_DCE_VFA
 #   doc: OE_IR + DCE_VFA
 #   tool: ../workflows/OE_IR_DCE_VFA.cwl
-#   job: workflows/OE_IR_DCE_VFA_test.json
+#   job: workflows/OE_IR_DCE_VFA_test.yml
 #   tags: [ workflows]
 #   output:

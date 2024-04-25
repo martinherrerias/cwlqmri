@@ -3,7 +3,7 @@
 
 ## Setup
 
-There's an example `*.json` input file for each tool/workflow in the `test` directory.
+There's a test `*.yml` input file for each tool/workflow in the `test` directory.
 Relative file paths are set to work with data placed under `test/data`.
 The script `load_test_data.sh` will place symlinks to the required subdirectories (`dce`, `oe`, `IR`, `VFA`) in the expected location: 
 
