@@ -87,7 +87,7 @@ inputs:
   init_params: double[]?
   init_maps: Directory?
   init_map_params: int[]?
-  residuals: File?
+  residuals_map: File?
   param_names: string[]?
   fixed_params: int[]?
   fixed_values: double[]?
@@ -99,8 +99,8 @@ inputs:
   repeat_values: double[]?
 
   # Output options
-  Ct_mod: boolean?
-  Ct_sig: boolean?
+  save_Ct_mod: boolean?
+  save_Ct_sig: boolean?
   iauc: int[]?
   iauc_peak: boolean?
 
@@ -246,7 +246,7 @@ steps:
       init_params: init_params
       init_maps: init_maps
       init_map_params: init_map_params
-      residuals: residuals
+      residuals_map: residuals_map
       param_names: param_names
       fixed_params: fixed_params
       fixed_values: fixed_values
@@ -257,8 +257,8 @@ steps:
       repeat_param: repeat_param
       repeat_values: repeat_values
     # Output options
-      Ct_sig: Ct_sig
-      Ct_mod: Ct_mod
+      save_Ct_sig: save_Ct_sig
+      save_Ct_mod: save_Ct_mod
       iauc: iauc
       iauc_peak: iauc_peak
     # Common inputs

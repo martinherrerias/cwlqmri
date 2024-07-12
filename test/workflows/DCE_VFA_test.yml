@@ -39,8 +39,8 @@ repeat_values: [0, 0.1, 0.2, 0.3, 0.4, 0.5]
 r1: 3.4
 test_enh: true
 
-Ct_mod: false
-Ct_sig: false
+save_Ct_mod: false
+save_Ct_sig: false
 iauc_peak: false
 
 nifti_scaling: false

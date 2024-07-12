@@ -343,7 +343,7 @@ inputs:
     inputBinding:
       prefix: --init_map_params
       itemSeparator: ", "
-  residuals:
+  residuals_map:
     label: Path to model residuals map as a target threshold for new fits
     type: File?
     # format: ??, secondaryFiles: ??
@@ -408,13 +408,13 @@ inputs:
       itemSeparator: ", "
   
   # Output options
-  Ct_sig:
+  save_Ct_sig:
     label: Save signal-derived dynamic concentration maps
     type: boolean?
     default: true
     inputBinding:
       prefix: --Ct_sig
-  Ct_mod:
+  save_Ct_mod:
     label: Save modelled dynamic concentration maps
     type: boolean?
     default: true
