@@ -24,9 +24,7 @@ doc: |
         - `img_fmt_w`is set to track `img_fmt_r`
       - Settings like `data_dir`, `output_dir`, `maps_dir`, `overwrite`
         are set to work with CWL, i.e. reading all inputs from the staging
-        directory, and writing all outputs to the output directory. The actual
-        system paths can be set by the runner, e.g.:
-          `cwltool --basedir <base/dir> --outdir <root/out> ...`
+        directory, and writing all outputs to the output directory.
       - Logs are time-stamped and suffixed by madym: `madym_DCE_{date}_{time}_{log.ext}`
         where `{log.ext}` is the value of the `--program_log`, `--config_out`, and
         `--autit` options, respectively. This wrapper renames them to a consistent

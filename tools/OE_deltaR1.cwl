@@ -20,8 +20,8 @@ doc: |
           not support any other file types (uses json.load).
         - `no_audit` is set to 1
       - Settings like `data_dir`, `output_dir`, `maps_dir`, `overwrite`
-        are set to work with CWL, e.g.:
-          `cwltool --basedir <base/dir> --outdir <root/out> ...`
+        are set to work with CWL, i.e. reading all inputs from the staging
+        directory, and writing all outputs to the output directory.
       - Logs are time-stamped and auto-renamed by QbiRunner. 
         This wrapper renames them to a consistent `OE_deltaR1.<ext>`.
 
