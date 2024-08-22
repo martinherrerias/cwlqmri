@@ -1,0 +1,12 @@
+# This file must be in the test-data directory, so that the realtive paths 
+# to input files/directories are correct
+# Run with:
+#   cwltool [--outdir OUT --cachedir TMP] OE_DCE_hypoxia_mapping.cwl DATA/OE_DCE_hypoxia_mapping.yml
+
+DCE_p_vals_path:
+    class: File
+    path: ../data/DCE_output_maps/C_p_vals.nii.gz
+OE_p_vals_path:
+    class: File
+    path: ../data/OE_output_maps/S_p_vals.nii.gz
+sig_level: 0.05

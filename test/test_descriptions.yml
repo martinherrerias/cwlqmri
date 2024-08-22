@@ -186,6 +186,19 @@
            { class: File, location: "madym_DCE.log" },           
            { class: File, location: "madym_DCE_override.cfg" }]
 
+- id: OE_DCE_hypoxia_mapping
+  doc: Generates hypoxia maps from DCE and OE p-value maps
+  tool: ../tools/OE_DCE_hypoxia_mapping.cwl
+  job: tools/OE_DCE_hypoxia_mapping.yml
+  tags: [ tools, post ]
+  output:
+    perfused_frac: { class: File, location: "perfused_frac.nii.gz"}
+    non_perfused_frac: { class: File, location: "non_perfused_frac.nii.gz"}
+    pOxyR: { class: File, location: "pOxyR.nii.gz"}
+    pOxyE: { class: File, location: "pOxyE.nii.gz"}
+    logs: [{ class: File, location: "OE_DCE_hypoxia_mapping.cfg" },
+           { class: File, location: "OE_DCE_hypoxia_mapping.log" }]
+
 # - id: OE_IR_DCE_VFA
 #   doc: OE_IR + DCE_VFA
 #   tool: ../workflows/OE_IR_DCE_VFA.cwl

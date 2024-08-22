@@ -18,6 +18,7 @@ Developed in the framework of the [*RADNET* project](https://github.com/orgs/UoM
 - `madym_DCE.cwl`: fits tracer-kinetic models to Dynamic Contrast Enhanced (DCE) time-series
 - `DCE_deltaCt.cwl`: calculates change in contrast agent concentration C(t) from DCE time-series
 - `OE_deltaR1.cwl`: calculates change in R1 relaxation rate from Oxygen Enhanced (OE) time-series
+- `OE_DCE_hypoxia_mapping.cwl`: Generates hypoxia maps from DCE and OE p-value maps
 - `OE_DCE_summary.cwl` [*PENDING!*]: apply ROI masks to DCE and OE data and calculate summary statistics
 
 # Workflows
