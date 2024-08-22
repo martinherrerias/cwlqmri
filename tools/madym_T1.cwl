@@ -32,11 +32,11 @@ doc: |
 
 hints:
   DockerRequirement:
-    dockerPull: ghcr.io/uomresearchit/radnet/preclinicalmri/core_pipelines:latest
+    dockerPull: registry.gitlab.com/manchester_qbi/preclinical_mri/core_pipelines:latest
   SoftwareRequirement:
     packages:
       - package: madym_T1
-        version: [ "v4.23.0" ]
+        version: [ "v4.24.0" ]
 
 requirements:
   InlineJavascriptRequirement: {}

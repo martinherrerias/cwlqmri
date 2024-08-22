@@ -29,7 +29,7 @@ doc: |
 
 hints:
   DockerRequirement:
-    dockerPull: ghcr.io/uomresearchit/radnet/preclinicalmri/core_pipelines:latest
+    dockerPull: registry.gitlab.com/manchester_qbi/preclinical_mri/core_pipelines:latest
 
 requirements:
   InlineJavascriptRequirement:

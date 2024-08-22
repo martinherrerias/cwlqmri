@@ -6,13 +6,13 @@ dyn_dir:
 dyn: dce_dyn_echo1.nii.gz
 T1: 
   class: File
-  path: ../output/tools/VFA/T1.nii.gz
+  path: ../data/madym_output/T1_VFA/T1.nii.gz
 Ct: false
 
 M0_ratio: true
 err: 
   class: File
-  path: ../output/tools/VFA/error_tracker.nii.gz
+  path: ../data/madym_output/T1_VFA/error_tracker.nii.gz
 
 model: ETM
 dose: 0.05

@@ -5,11 +5,14 @@
 
 There's a test `*.yml` input file for each tool/workflow in the `test` directory.
 Relative file paths are set to work with data placed under `test/data`.
-The script `load_test_data.sh` will place symlinks to the required subdirectories (`dce`, `oe`, `IR`, `VFA`) in the expected location: 
+The script `load_test_data.sh` will place symlinks to the required subdirectories (`dce`, `oe`, `IR`, ... , `OE_output_maps`) in the expected locations: 
 
 ```bash
-bash test/load_test_data.sh <DATA_DIR> [<sub-directories>]
+bash test/load_test_data.sh DATA_DIR
 ```
+
+Where `DATA_DIR` is a reference (processed) acquisition directory, e.g. 
+`test_datasets/processed/20230705_142924_230408_1_1` from [test_datasets](https://gitlab.com/manchester_qbi/preclinical_mri/core_pipelines).
 
 If the data does not conform to this structure, the input files will need to be edited accordingly. Relative paths are interpreted as relative to the input file's location.
 

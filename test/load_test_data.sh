@@ -2,12 +2,16 @@
 # Usage: ./load_test_data.sh <DATA_DIR> [REQ]
 # Create symlinks to the required subdirectories REQ in ./test/data/*
 # DATA_DIR: directory containing input data
-# REQ: list of required subdirectories, default: (dce oe IR VFA)
+# REQ: list of required subdirectories, default: (dce oe IR VFA madym_output DCE_output_maps OE_output_maps)
 
 cd "$( dirname "${BASH_SOURCE[0]}" )"
 mkdir -p data
 
 DATA=$1
+if [[ ! "$DATA" = /* ]]; then
+    DATA=$(pwd)/$DATA
+fi
+DATA=${DATA%/}
 if [ ! -d "$DATA" ]; then
     echo "Invalid DATA directory: $DATA"
     exit 1
@@ -15,7 +19,7 @@ fi
 shift
 
 REQ=($@)
-[ ${#REQ[@]} -eq 0 ] && REQ=(dce oe IR VFA)
+[ ${#REQ[@]} -eq 0 ] && REQ=(dce oe IR VFA madym_output DCE_output_maps OE_output_maps)
 
 echo "Staging: (${REQ[@]}) from ${DATA}"
 
