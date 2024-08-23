@@ -4,17 +4,19 @@
 ## Setup
 
 There's a test `*.yml` input file for each tool/workflow in the `test` directory.
-Relative file paths are set to work with data placed under `test/data`.
-The script `load_test_data.sh` will place symlinks to the required subdirectories (`dce`, `oe`, `IR`, ... , `OE_output_maps`) in the expected locations: 
+Relative file paths are set to work with data placed under `test/data`, with
+the same structure as the reference `processed` acquisition directories in
+[`test_datasets`](https://gitlab.com/manchester_qbi/preclinical_mri/test_datasets).
+
+The script `load_test_data.sh` will place symlinks to the required subdirectories
+(`dce`, `oe`, ...), in `test/data/`, and the ROI map in `test/data/roi_masks/`.
+To "load" (i.e. symlink) the Nth test dataset, run:
 
 ```bash
-bash test/load_test_data.sh DATA_DIR
+bash test/load_test_data.sh "PATH/TO/TEST_DATA" N
 ```
 
-Where `DATA_DIR` is a reference (processed) acquisition directory, e.g. 
-`test_datasets/processed/20230705_142924_230408_1_1` from [test_datasets](https://gitlab.com/manchester_qbi/preclinical_mri/core_pipelines).
-
-If the data does not conform to this structure, the input files will need to be edited accordingly. Relative paths are interpreted as relative to the input file's location.
+If the data does not conform to this structure, the input files will need to be edited accordingly.
 
 ## Running Tests
 
@@ -47,6 +49,6 @@ For examples, see the CWL spec. test description file: [conformance_tests.yaml](
 ## TODO
 
 - Generate synthetic data (to avoid dependency on external data)
-- Add output file hashes (currently only checking for existence of output files)
+- Add output file hashes? (currently only checking for existence of output files) -- this won't work for NIFTI files, which have timestamps in the header
 - Automate tests using CI/CD (e.g. GitHub Actions)
 
