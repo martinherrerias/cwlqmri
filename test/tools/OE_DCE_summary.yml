@@ -1,0 +1,15 @@
+# This file must be in the test-data directory, so that the realtive paths 
+# to input files/directories are correct
+# Run with:
+#   cwltool [--outdir OUT --cachedir TMP] OE_DCE_summary.cwl DATA/OE_DCE_summary.yml
+
+data_dir:
+    class: Directory
+    location: ../data
+config:
+    class: File
+    path: OE_DCE_summary_config.yml
+roi_masks_dir:
+    class: Directory
+    location: ../data/roi_masks
+debug: true

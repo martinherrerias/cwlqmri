@@ -1,0 +1,18 @@
+# See: python -m PreclinicalMRI.pipelines.qMRI_processes.OE_DCE_summary -h
+
+p_thresh: 0.05
+c_thresh: 0.001
+area_thresh: 10
+
+copy_map_locations:
+  - {src: 'madym_output/T1_IR/T1', tgt: 'T1_IR'}
+
+p_val_map_locations:
+  - {src: 'OE_output_maps/R1_p_vals', tgt: 'OE_R1_p_vals'}
+
+converted_map_locations:
+  - {src: 'madym_output/T1_IR/T1', tgt: 'R1_IR', op: 'reciprocal'}
+
+DCE_map_locations:
+  v_e: 'madym_output/ETM_pop/v_e'
+  v_p: 'madym_output/ETM_pop/v_p'

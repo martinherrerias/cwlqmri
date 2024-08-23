@@ -199,6 +199,24 @@
     logs: [{ class: File, location: "OE_DCE_hypoxia_mapping.cfg" },
            { class: File, location: "OE_DCE_hypoxia_mapping.log" }]
 
+- id: OE_DCE_summary
+  doc: Apply ROI masks, generate significance maps and summary statistics
+  tool: ../tools/OE_DCE_summary.cwl
+  job: tools/OE_DCE_summary.yml
+  tags: [ tools, post ]
+  output:
+    roi_map_stats: [{ class: File, location: "my_roi_map_stats.csv" }]
+    roi_dir: [{ class: Directory, location: "my_roi", listing: [
+      { class: File, basename: "DCE_v_e.nii.gz"},
+      { class: File, basename: "DCE_v_p.nii.gz"},
+      { class: File, basename: "OE_R1_p_vals_sig_bf.nii.gz"},
+      { class: File, basename: "T1_IR.nii.gz"},
+      { class: File, basename: "OE_R1_p_vals_sig.nii.gz"},
+      { class: File, basename: "OE_R1_p_vals_sig_forman.nii.gz"},
+      { class: File, basename: "R1_IR.nii.gz"}
+    ]}]
+    log_file: { class: File, location: "OE_DCE_summary.log" }
+
 # - id: OE_IR_DCE_VFA
 #   doc: OE_IR + DCE_VFA
 #   tool: ../workflows/OE_IR_DCE_VFA.cwl
