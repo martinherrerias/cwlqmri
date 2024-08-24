@@ -87,6 +87,11 @@ inputs:
     type: Directory?
     inputBinding:
       prefix: --shared_masks_dir
+  search_string:
+    label: String to match against SHARED_MASKS_DIR/* file tokens
+    type: string?
+    inputBinding:
+      prefix: --search_string
   debug:
     label: Print debug messages
     type: boolean?
