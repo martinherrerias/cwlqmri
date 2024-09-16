@@ -35,6 +35,7 @@ inputs:
     default: 1000
   B1: File?
   TR: double?
+  T1_init_params: double[]?
 
   nifti_scaling: boolean?
   use_BIDS:
@@ -112,6 +113,7 @@ steps:
       B1_scaling: B1_scaling
       B1: B1
       TR: TR
+      T1_init_params: T1_init_params
       roi: roi
       nifti_4D:
         default: true

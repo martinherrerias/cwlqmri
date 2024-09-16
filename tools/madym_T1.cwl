@@ -132,6 +132,14 @@ inputs:
     type: double?
     inputBinding:
       prefix: --TR
+  T1_init_params:
+    label: Initial values for [T1, M0] to be optimised
+    doc: |
+      If only 1 set, this will initialise T1.
+    type: double[]?
+    inputBinding:
+      prefix: --T1_init_params
+      itemSeparator: ", "
   roi:
     label: Path to ROI map
     type: File?

@@ -43,6 +43,7 @@ inputs:
     default: 1000
   B1: File?
   TR: double?
+  T1_init_params: double[]?
 
 # deltaR1 inputs
   oe_path: 
@@ -147,6 +148,7 @@ steps:
       B1_scaling: B1_scaling
       B1: B1
       TR: TR
+      T1_init_params: T1_init_params
       nifti_scaling: nifti_scaling
       use_BIDS: use_BIDS
       voxel_size_warn_only: voxel_size_warn_only
