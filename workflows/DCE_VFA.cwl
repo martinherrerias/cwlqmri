@@ -9,7 +9,7 @@ doc: |
     3. Fits a tracer-kinetic model to DCE time-series data (using VFA T1 map).
 
     NOTES:
-        - `nifti_4D` is hard-set to TRUE (required for OE_deltaR1.cwl)
+        - `nifti_4D` is hard-set to TRUE for ETM, FALSE for VFA
         - `img_fmt_r`/`img_fmt_w` are hard-set to `NIFTI_GZ` (id.)
 requirements:
   InlineJavascriptRequirement: {}
@@ -186,7 +186,7 @@ steps:
       TR: TR
       roi: roi
       nifti_4D:
-        default: true
+        default: false
       img_fmt_r:
         default: NIFTI_GZ
       nifti_scaling: nifti_scaling

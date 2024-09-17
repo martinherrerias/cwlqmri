@@ -17,8 +17,6 @@ doc: |
 
     NOTES:
       - The following override the madym_T1 defaults:
-        - `nifti_4D` defaults to TRUE for NIFTI and NIFTI_GZ `img_fmt_r`
-        - `nifti_scaling` defaults to TRUE
         - `use_BIDS` defaults to TRUE
         - `img_fmt_r` defaults to `NIFTI_GZ`
         - `img_fmt_w`is set to track `img_fmt_r`
@@ -155,17 +153,9 @@ inputs:
       prefix: --err
   nifti_4D:
     label: Read NIFTI 4D images for T1 mapping and dynamic inputs? 
-    doc: |
-      Default is TRUE for NIFTI and NIFTI_GZ `img_fmt_r`.
-    type: 
-      - boolean
-      - type: enum
-        symbols: [ "auto" ]
-    default: "auto"
+    type: boolean?
     inputBinding:
       prefix: --nifti_4D
-      valueFrom: |
-        $(self !== "auto" ? self: inputs.img_fmt_r.startsWith("NIFTI"))
   nifti_scaling:
     label: Apply intensity scaling and offset when reading/writing NIFTI images
     type: boolean?

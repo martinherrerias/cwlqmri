@@ -7,7 +7,7 @@ doc: |
     then compares the average R1(t) for the baseline and enhancing periods.
 
     NOTES:
-        - `nifti_4D` is hard-set to TRUE (required for OE_deltaR1.cwl)
+        - `nifti_4D` is hard-set to FALSE
         - `img_fmt_r`/`img_fmt_w` are hard-set to `NIFTI_GZ` (id.)
 
 requirements:
@@ -116,7 +116,7 @@ steps:
       T1_init_params: T1_init_params
       roi: roi
       nifti_4D:
-        default: true
+        default: false
       img_fmt_r:
         default: NIFTI_GZ
       nifti_scaling: nifti_scaling

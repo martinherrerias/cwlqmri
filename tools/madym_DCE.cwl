@@ -17,8 +17,6 @@ doc: |
 
     NOTES:
       - The following override the madym_DCE defaults:
-        - `nifti_4D` defaults to TRUE for NIFTI and NIFTI_GZ `img_fmt_r`
-        - `nifti_scaling` defaults to TRUE
         - `use_BIDS` defaults to TRUE
         - `img_fmt_r` defaults to `NIFTI_GZ`
         - `img_fmt_w`is set to track `img_fmt_r`
@@ -81,18 +79,11 @@ inputs:
   nifti_4D:
     label: Read NIFTI 4D images for T1 mapping and dynamic inputs? 
     doc: |
-      Default is TRUE for NIFTI and NIFTI_GZ `img_fmt_r`.
       If set, the following arguments are ignored (see `dyn`):
       `n_dyns`, `sequence_format`, `sequence_start`, `sequence_step`
-    type: 
-      - boolean
-      - type: enum
-        symbols: [ "auto" ]
-    default: "auto"
+    type: boolean?
     inputBinding:
       prefix: --nifti_4D
-      valueFrom: |
-        $(self !== "auto" ? self: inputs.img_fmt_r.startsWith("NIFTI"))
   dyn_dir:
     label: Folder containing dynamic volumes
     type: Directory
