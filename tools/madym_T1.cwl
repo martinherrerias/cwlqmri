@@ -49,8 +49,8 @@ arguments:
   # See NOTES
   - prefix: --output_root
     valueFrom: $(runtime.outdir)
-  - prefix: --output
-    valueFrom: ""
+  # - prefix: --output
+  #   valueFrom: ""
   - prefix: --audit_dir
     valueFrom: $(runtime.outdir)
   - prefix: --audit
